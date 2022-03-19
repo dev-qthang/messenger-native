@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "mess",
-    "slug": "mess",
+    "name": "PeakyApp",
+    "slug": "PeakyApp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
