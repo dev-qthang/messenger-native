@@ -1,59 +1,59 @@
-import React from 'react';
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import React from "react";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 
-import {SwipeListView} from 'react-native-swipe-list-view';
+import { SwipeListView } from "react-native-swipe-list-view";
 
-import {styles} from './UserListing.styles';
-import {images} from '../../../images';
+import { styles } from "./UserListing.styles";
+import { images } from "../../../images";
 
 const Data = [
   {
     id: 1,
-    name: 'Martin Randolph',
+    name: "Martin Randolph",
     image: images.user_1,
-    lastMessage: 'You: What’s man! · 9:40 AM ',
+    lastMessage: "You: What’s man! · 9:40 AM ",
   },
   {
     id: 2,
-    name: 'Andrew Parker',
+    name: "Andrew Parker",
     image: images.user_2,
-    lastMessage: 'You: Ok, thanks! · 9:25 AM ',
+    lastMessage: "You: Ok, thanks! · 9:25 AM ",
   },
   {
     id: 3,
-    name: 'Karen Castillo',
+    name: "Karen Castillo",
     image: images.user_3,
-    lastMessage: 'You: Ok, See you in To… · Fri',
+    lastMessage: "You: Ok, See you in To… · Fri",
   },
   {
     id: 4,
-    name: 'Maisy Humphrey',
+    name: "Maisy Humphrey",
     image: images.user_4,
-    lastMessage: 'Have a good day, Maisy! · Fri',
+    lastMessage: "Have a good day, Maisy! · Fri",
   },
   {
     id: 5,
-    name: 'Joshua Lawrence',
+    name: "Joshua Lawrence",
     image: images.user_5,
-    lastMessage: 'The business plan loo…  · Thu ',
+    lastMessage: "The business plan loo…  · Thu ",
   },
   {
     id: 6,
-    name: 'Karen Castillo',
+    name: "Karen Castillo",
     image: images.user_3,
-    lastMessage: 'You: Ok, See you in To… · Fri',
+    lastMessage: "You: Ok, See you in To… · Fri",
   },
   {
     id: 7,
-    name: 'Maisy Humphrey',
+    name: "Maisy Humphrey",
     image: images.user_4,
-    lastMessage: 'Have a good day, Maisy! · Fri',
+    lastMessage: "Have a good day, Maisy! · Fri",
   },
   {
     id: 8,
-    name: 'Joshua Lawrence',
+    name: "Joshua Lawrence",
     image: images.user_5,
-    lastMessage: 'The business plan loo…  · Thu ',
+    lastMessage: "The business plan loo…  · Thu ",
   },
 ];
 
@@ -76,7 +76,7 @@ const UserListing = () => {
     </View>
   );
 
-  const renderItem = ({item}) => {
+  const renderItem = ({ item }) => {
     return (
       <View style={styles.userItemContainer}>
         <Image source={item.image} style={styles.userIcon} />
@@ -85,7 +85,7 @@ const UserListing = () => {
             <Text style={styles.label1}>{item.name}</Text>
             <Text style={styles.label2}>{item.lastMessage}</Text>
           </View>
-          <Image source={images.checked} />
+          <Image source={images.checked} style={styles.checked} />
         </View>
       </View>
     );

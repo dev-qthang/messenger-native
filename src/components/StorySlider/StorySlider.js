@@ -1,9 +1,9 @@
-import React from 'react';
-import {View, Image, FlatList, Text} from 'react-native';
-import {styles} from './StorySlider.styles';
+import React from "react";
+import { View, Image, FlatList, Text } from "react-native";
+import { styles } from "./StorySlider.styles";
 
-const StorySlider = ({data}) => {
-  const renderItem = ({item}) => (
+const StorySlider = ({ data }) => {
+  const renderItem = ({ item }) => (
     <View style={styles.userIconContainer}>
       <Image source={item.image} />
       <Text style={styles.userName}>{item.user}</Text>
@@ -17,7 +17,7 @@ const StorySlider = ({data}) => {
         horizontal
         data={data}
         renderItem={renderItem}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
       />
     </View>
   );
