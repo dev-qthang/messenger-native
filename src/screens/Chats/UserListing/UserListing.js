@@ -57,7 +57,7 @@ const Data = [
   },
 ];
 
-const UserListing = () => {
+const UserListing = ({ navigation }) => {
   const renderHiddenItem = (data, rowMap) => (
     <View style={styles.rowBack}>
       <View style={styles.itemRowWrapper}>
@@ -78,16 +78,18 @@ const UserListing = () => {
 
   const renderItem = ({ item }) => {
     return (
-      <View style={styles.userItemContainer}>
-        <Image source={item.image} style={styles.userIcon} />
-        <View style={styles.userDetailsSectionContainer}>
-          <View>
-            <Text style={styles.label1}>{item.name}</Text>
-            <Text style={styles.label2}>{item.lastMessage}</Text>
+      <TouchableOpacity activeOpacity={1} onPress={() => navigation.navigate('Chat')}>
+        <View style={styles.userItemContainer}>
+          <Image source={item.image} style={styles.userIcon} />
+          <View style={styles.userDetailsSectionContainer}>
+            <View>
+              <Text style={styles.label1}>{item.name}</Text>
+              <Text style={styles.label2}>{item.lastMessage}</Text>
+            </View>
+            <Image source={images.checked} style={styles.checked} />
           </View>
-          <Image source={images.checked} style={styles.checked} />
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
   return (

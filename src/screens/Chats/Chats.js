@@ -16,7 +16,7 @@ const DATA = [
   {id: 5, image: images.user_5, user: 'Joshua'},
 ];
 
-const Chats = () => {
+const Chats = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <Header
@@ -26,7 +26,7 @@ const Chats = () => {
       />
       <SearchBox />
       <StorySlider data={DATA} />
-      <UserListing />
+      <UserListing navigation={navigation} />
     </SafeAreaView>
   );
 };
