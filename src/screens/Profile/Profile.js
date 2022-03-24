@@ -29,7 +29,7 @@ const data = {
   github: "include-cookieguy",
 };
 
-const Profile = ({ navigator }) => {
+const Profile = ({ navigation }) => {
   const userInfo = useSelector((state) => state.user);
 
   return (
@@ -65,7 +65,7 @@ const Profile = ({ navigator }) => {
 
         <TouchableOpacity
           style={styles.tabContainer}
-          onPress={() => navigator.navigate("EditProfile")}
+          onPress={() => navigation.navigate("EditProfile")}
         >
           <View style={styles.tabImageContainer}>
             <Icon
