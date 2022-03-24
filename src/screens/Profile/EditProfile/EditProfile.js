@@ -32,7 +32,7 @@ const data = {
   lives: "Ha Noi, Vietnam",
   address: "Chi Nê, Hoà Bình, Vietnam",
   instagram: "q.thangg_13",
-  github: "include-cookieguy",
+  github: "dev-qthang",
   gender: "Male",
   dateOfBirth: "13/10/2001",
 };
