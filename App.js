@@ -9,7 +9,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import store from "./src/redux/store";
 import { images } from "./src/images";
 import Chats from "./src/screens/Chats/Chats";
-import Chat from "./src/screens/Chats/Stacks/Chat";
+import Chat from "./src/screens/Chats/Stacks/Chat/Chat";
+import ConversationSettings from "./src/screens/Chats/Stacks/Convesation/ConversationSettings";
 import People from "./src/screens/People/People";
 import Discover from "./src/screens/Discover/Discover";
 import Profile from "./src/screens/Profile/Profile";
@@ -86,6 +87,13 @@ const App = () => {
           <Stack.Screen 
             name="Chat" 
             component={Chat} 
+            options={{
+              headerShown: false
+            }}
+          />
+          <Stack.Screen 
+            name="ConversationSettings"
+            component={ConversationSettings}
             options={{
               headerShown: false
             }}
