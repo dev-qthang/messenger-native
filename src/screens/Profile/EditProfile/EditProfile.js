@@ -22,6 +22,7 @@ import Modal from "react-native-modal";
 import UserPermissions from "../../../utils/UserPermissions";
 import * as ImagePicker from "expo-image-picker";
 import { Camera } from "expo-camera";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const data = {
   name: "Nguyen Quyet Thang",
@@ -32,12 +33,12 @@ const data = {
   lives: "Ha Noi, Vietnam",
   address: "Chi Nê, Hoà Bình, Vietnam",
   instagram: "q.thangg_13",
-  github: "include-cookieguy",
+  github: "dev-qthang",
   gender: "Male",
   dateOfBirth: "13/10/2001",
 };
 
-const EditProfile = () => {
+const EditProfile = ({ navigation }) => {
   const dispatch = useDispatch();
   const [info, setInfo] = useState({
     avatar: "https://i.redd.it/i3peg3rqksa51.png",
@@ -117,7 +118,11 @@ const EditProfile = () => {
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <View style={styles.headerEdit}>
-          <Ionicons name="arrow-back" style={styles.headerIcon} />
+          <Ionicons
+            name="arrow-back"
+            style={styles.headerIcon}
+            onPress={() => navigation.navigate("Profile")}
+          />
           <Text style={styles.headerText}>Edit Profile</Text>
         </View>
 
@@ -161,7 +166,7 @@ const EditProfile = () => {
               Edit
             </Text>
           </View>
-          <Text style={styles.textBio}>{info.bio}</Text>
+          <Text style={styles.textBio}>{userInfo.bio}</Text>
           <Modal isVisible={modalVisible.bio}>
             <View style={styles.modalView}>
               <Text style={styles.modalTypeText}>Edit Bio</Text>
@@ -223,17 +228,17 @@ const EditProfile = () => {
           <View style={styles.infoContainer}>
             <View style={styles.infoItem}>
               <Text style={styles.typeInfo}>Full Name:</Text>
-              <Text style={styles.textInfo}>{info.name}</Text>
+              <Text style={styles.textInfo}>{userInfo.name}</Text>
             </View>
 
             <View style={styles.infoItem}>
               <Text style={styles.typeInfo}>Gender:</Text>
-              <Text style={styles.textInfo}>{data.gender}</Text>
+              <Text style={styles.textInfo}>{userInfo.gender}</Text>
             </View>
 
             <View style={styles.infoItem}>
               <Text style={styles.typeInfo}>Date Of Birth:</Text>
-              <Text style={styles.textInfo}>{data.dateOfBirth}</Text>
+              <Text style={styles.textInfo}>{userInfo.dateOfBirth}</Text>
             </View>
           </View>
 

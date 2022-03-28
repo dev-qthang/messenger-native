@@ -6,8 +6,8 @@ const userSlice = createSlice({
     avatar: "https://i.redd.it/i3peg3rqksa51.png",
     wallpaper:
       "https://i.pinimg.com/736x/f4/f9/1c/f4f91c394261080ff096d7c7843eb4c7.jpg",
-    name: "",
-    bio: "",
+    name: "Nguyen Quyet Thang",
+    bio: "Dang code native",
     schools: {
       schoolName: "",
       branch: "",
@@ -22,8 +22,8 @@ const userSlice = createSlice({
     address: "",
     instagram: "",
     github: "",
-    gender: "",
-    dateOfBirth: "",
+    gender: "Male",
+    dateOfBirth: "13/10/2001",
   },
   reducers: {
     editAttributeUser(state, action) {
