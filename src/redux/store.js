@@ -1,15 +1,21 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, applyMiddleware } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
+import { composeWithDevTools } from "redux-devtools-extension";
 import userSlice from "./userSlice";
+import themeSlice from "./themeSlice";
+import authSlice from "./authSlice";
 
-// const reducer = combineReducers({
-//   todos,
-// });
+const composedEnhancers = composeWithDevTools();
+
+const rootReducer = combineReducers({
+  user: userSlice,
+  theme: themeSlice,
+  auth: authSlice,
+});
 
 const store = configureStore({
-  reducer: {
-    user: userSlice,
-  },
+  reducer: rootReducer,
+  composedEnhancers,
 });
 
 export default store;

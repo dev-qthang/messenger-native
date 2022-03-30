@@ -26,7 +26,7 @@ const data = {
   lives: "Ha Noi, Vietnam",
   address: "Chi Nê, Hoà Bình, Vietnam",
   instagram: "q.thangg_13",
-  github: "dev-qthang",
+  github: "include-cookieguy",
 };
 
 const Profile = ({ navigation }) => {

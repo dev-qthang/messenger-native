@@ -8,4 +8,5 @@ export const colors = {
   green02: "#56953e",
   mainColor: "#1877f2",
   secondColor: "#4267B2",
+  redColor: "#dd4d44",
 };

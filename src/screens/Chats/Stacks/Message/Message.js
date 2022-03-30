@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, Image } from "react-native";
 import { styles } from "./Message.styles";
-import { images } from "../../../images";
+import { images } from "../../../../images";
 
 export const LeftMessage = ({ imgSource, arrMessages }) => {
 
@@ -12,8 +12,9 @@ export const LeftMessage = ({ imgSource, arrMessages }) => {
       </View>
       
       <View style={styles.text}>
-        <Text style={styles.textValue}>We re-created Facebook Messenger UI design to help designers and developers visualize</Text>
-        <Text style={styles.textValue}>We re-created Facebook Messenger UI design to help designers and developers visualize</Text>
+        {arrMessages.map(item => 
+          <Text key={item.id} style={styles.textValue}>{ item.value }</Text>
+        )}
       </View>
     </View>
   )
@@ -24,8 +25,9 @@ export const RightMessage = ({ imgSource, arrMessages }) => {
   return (
     <View style={styles.right_container}>
       <View style={styles.text}>
-        <Text style={styles.textValue}>We re-created Facebook Messenger UI design to help designers and developers visualize</Text>
-        <Text style={styles.textValue}>We re-created Facebook Messenger UI design to help designers and developers visualize</Text>
+        {arrMessages.map(item => 
+          <Text key={item.id} style={styles.textValue}>{ item.value }</Text>
+        )}
       </View>
       
       <View style={styles.avatar}>

@@ -6,14 +6,13 @@ import Feather from "react-native-vector-icons/Feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import AntDesign from "react-native-vector-icons/AntDesign";
-import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 
 import { styles } from './Chat.styles';
-import { colors } from '../../../theme/colors';
-import { images } from '../../../images';
+import { colors } from '../../../../theme/colors';
+import { images } from '../../../../images';
 
-import { LeftMessage, RightMessage } from './Message';
+import { LeftMessage, RightMessage } from '../Message/Message';
 
 const Header = ({ navigation }) => {
   return (
@@ -23,11 +22,20 @@ const Header = ({ navigation }) => {
       </TouchableOpacity>
 
       <View style={styles.headerInfo}>
-        <Image source={images.avatar} style={styles.header_avatarIcon} />
-        <View>
-          <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Username</Text>
-          <Text style={{ fontSize: 12 }}>Status</Text>
-        </View>
+        <TouchableOpacity 
+          activeOpacity={.6} 
+          style={{flexDirection: "row"}}
+          onPress={() => navigation.navigate("ConversationSettings", {
+            avatar: images.avatar,
+            userInfo: { username: "Alex", status: "Active" }
+          })}
+        >
+          <Image source={images.avatar} style={styles.header_avatarIcon} />
+          <View>
+            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Username</Text>
+            <Text style={{ fontSize: 12 }}>Status</Text>
+          </View>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.header_actions}>
@@ -47,18 +55,18 @@ const Body = () => {
   const leftData = {
     imgSource: images.default_avatar,
     arrMessage: [
-      { id: 0, value: "Hello from my laptop Hello from my laptop Hello from my laptop" },
-      { id: 1, value: "Hello from my laptop Hello from my laptop Hello from my laptop" },
-      { id: 2, value: "Hello from my laptop Hello from my laptop Hello from my laptop" },
+      { id: 0, value: "We re-created Facebook Messenger UI design to help designers and developers visualizee" },
+      { id: 1, value: "We re-created Facebook Messenger UI design to help designers and developers visualizee" },
+      { id: 2, value: "We re-created Facebook Messenger UI design to help designers and developers visualizee" },
     ]
   };
 
   const rightData = {
     imgSource: images.default_avatar,
     arrMessage: [
-      { id: 0, value: "Hello from my laptop Hello from my laptop Hello from my laptop" },
-      { id: 1, value: "Hello from my laptop Hello from my laptop Hello from my laptop" },
-      { id: 2, value: "Hello from my laptop Hello from my laptop Hello from my laptop" },
+      { id: 0, value: "We re-created Facebook Messenger UI design to help designers and developers visualizee" },
+      { id: 1, value: "We re-created Facebook Messenger UI design to help designers and developers visualizee" },
+      { id: 2, value: "We re-created Facebook Messenger UI design to help designers and developers visualizee" },
     ]
   }
 
