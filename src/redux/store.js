@@ -13,9 +13,4 @@ const rootReducer = combineReducers({
   auth: authSlice,
 });
 
-const store = configureStore({
-  reducer: rootReducer,
-  composedEnhancers,
-});
-
-export default store;
+export default rootReducer;
