@@ -45,10 +45,6 @@ export const images = {
   editprofile: require("./images/editprofile.png"),
   more: require("./images/more.png"),
   default_avatar: require("./images/default_avatar.jpg"),
-<<<<<<< HEAD
-  Logo: require("./images/Logo.jpg"),
-=======
   Logo: require("./images/logo.png"),
   LogoFrame: require('./images/logo-frame.png'),
->>>>>>> bb594776a05f66e71bfa49c8fbaa6c7234a05a23
 };
