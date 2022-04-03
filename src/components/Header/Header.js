@@ -10,6 +10,8 @@ import { logout } from "../../redux/authSlice";
 
 const Header = ({ heading, icon1, icon2 }) => {
   const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+  const user = useSelector((state) => state.user);
   // const theme = useSelector((state) => state.theme);
   // const [themeMode, setThemeMode] = useState(false);
   // useEffect(() => {
@@ -32,7 +34,7 @@ const Header = ({ heading, icon1, icon2 }) => {
     <View style={styles.container}>
       <View style={styles.row}>
         <TouchableOpacity>
-          <Image style={styles.avatar} source={images.avatar} />
+          <Image style={styles.avatar} source={user.avatar} />
         </TouchableOpacity>
         <Text style={styles.title}>{heading}</Text>
       </View>

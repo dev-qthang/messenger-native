@@ -21,6 +21,8 @@ import LogIn from "./src/screens/Auth/LogIn/LogIn";
 import { useEffect } from "react";
 import { loginSuccess } from "./src/redux/authSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import SignUp from "./src/screens/Auth/SignUp/SignUp";
+import { getUserInfo } from "./src/redux/userSlice";
 
 const Tab = createBottomTabNavigator();
 
@@ -82,7 +84,6 @@ const Container = () => {
 
   useEffect(() => {
     const getToken = async () => {
-      // await AsyncStorage.removeItem("@user_token");
       const res = await AsyncStorage.getItem("@user_token");
 
       dispatch(
@@ -98,12 +99,23 @@ const Container = () => {
     }
   }, []);
 
+  useEffect(() => {
+    dispatch(getUserInfo(auth.token));
+  }, [auth]);
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
           name="Home"
           component={auth.token ? Home : LogIn}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="SignUp"
+          component={SignUp}
           options={{
             headerShown: false,
           }}

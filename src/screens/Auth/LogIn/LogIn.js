@@ -8,14 +8,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { colors } from "../../../theme/colors";
 import { login } from "../../../redux/authSlice";
 import { useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
 
-const LogIn = () => {
+const LogIn = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
-  const { navigate } = useNavigation();
 
   const onLogInPressed = () => {
     dispatch(login({ email, password }));
@@ -23,7 +21,7 @@ const LogIn = () => {
 
   useEffect(() => {
     if (auth.token) {
-      navigate("Home");
+      navigation.navigate("Home");
     }
   }, [auth]);
 
@@ -33,7 +31,9 @@ const LogIn = () => {
 
   const onSignInGoogle = () => {};
 
-  const onSignUp = () => {};
+  const onSignUp = () => {
+    navigation.navigate("SignUp");
+  };
 
   return (
     <View style={styles.container}>

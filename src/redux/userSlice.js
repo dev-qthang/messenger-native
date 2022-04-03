@@ -1,31 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { postDataAPI, getDataAPI } from "../utils/fetchData";
 
 const userSlice = createSlice({
   name: "user",
-  initialState: {
-    avatar: "https://i.redd.it/i3peg3rqksa51.png",
-    wallpaper:
-      "https://i.pinimg.com/736x/f4/f9/1c/f4f91c394261080ff096d7c7843eb4c7.jpg",
-    name: "Nguyen Quyet Thang",
-    bio: "Dang code native",
-    schools: {
-      schoolName: "",
-      branch: "",
-      graduated: false,
-    },
-    workPlaces: {
-      workPlaceName: "",
-      position: "",
-      currentlyWorking: false,
-    },
-    lives: "",
-    address: "",
-    instagram: "",
-    github: "",
-    gender: "Male",
-    dateOfBirth: "13/10/2001",
-  },
+  initialState: {},
   reducers: {
+    getInfo(state, action) {
+      return action.payload;
+    },
     editAttributeUser(state, action) {
       return { ...state, [action.payload.type]: action.payload.data };
     },
@@ -36,7 +18,17 @@ const userSlice = createSlice({
   },
 });
 
+export const getUserInfo = (auth) => async (dispatch) => {
+  try {
+    const res = await getDataAPI("user", auth);
+
+    dispatch(getInfo(res.data));
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 const { actions, reducer } = userSlice;
-export const { editAttributeUser, removeAttributeUser } = actions;
+export const { getInfo, editAttributeUser, removeAttributeUser } = actions;
 
 export default reducer;

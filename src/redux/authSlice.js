@@ -8,6 +8,10 @@ const authSlice = createSlice({
     email: "",
     password: "",
     token: "",
+    firstName: "",
+    lastName: "",
+    dateOfBirth: "",
+    gender: "",
   },
   reducers: {
     loginSuccess(state, action) {
@@ -21,6 +25,18 @@ const authSlice = createSlice({
       state.email = "";
       state.password = "";
       state.token = "";
+    },
+    registerSuccess(state, action) {
+      const { firstName, lastName, dateOfBirth, gender, email, password } =
+        action.payload.user;
+      const { access_token } = action.payload;
+      state.token = access_token;
+      state.email = email;
+      state.password = password;
+      state.dateOfBirth = dateOfBirth;
+      state.firstName = firstName;
+      state.lastName = lastName;
+      state.gender = gender;
     },
   },
 });
@@ -51,6 +67,34 @@ export const logout = () => async (dispatch) => {
   }
 };
 
+export const register = (info) => async (dispatch) => {
+  try {
+    const res = await postDataAPI("auth/register", info);
+
+    if (res.data) {
+      await AsyncStorage.setItem("@user_token", res.data.access_token);
+    }
+
+    dispatch(registerSuccess(res.data));
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const refresh = () => async (dispatch) => {
+  try {
+    const res = await postDataAPI("auth/refresh", info);
+
+    if (res.data) {
+      await AsyncStorage.setItem("@user_token", res.data.access_token);
+    }
+
+    dispatch(registerSuccess(res.data));
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 const { actions, reducer } = authSlice;
-export const { loginSuccess, logoutSuccess } = actions;
+export const { loginSuccess, logoutSuccess, registerSuccess } = actions;
 export default reducer;

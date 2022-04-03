@@ -1,21 +1,21 @@
-import {StyleSheet} from 'react-native';
-import {colors} from '../../theme/colors';
+import { StyleSheet } from "react-native";
+import { colors } from "../../theme/colors";
 
 export const styles = StyleSheet.create({
   container: {
     marginTop: 24,
-    display: 'flex',
+    display: "flex",
     backgroundColor: colors.white,
-    justifyContent: 'space-between',
-    flexDirection: 'row',
+    justifyContent: "space-between",
+    flexDirection: "row",
   },
   row: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   title: {
     fontSize: 30,
-    fontWeight: '700',
+    fontWeight: "700",
   },
   icon: {
     width: 40,
@@ -28,5 +28,6 @@ export const styles = StyleSheet.create({
     height: 40,
     marginHorizontal: 15,
     marginVertical: 15,
+    borderRadius: 50,
   },
 });

@@ -112,6 +112,9 @@ export const styles = StyleSheet.create({
   aboutContainer: {
     marginTop: 15,
   },
+  containerSchool: {
+    display: "flex",
+  },
   aboutItem: {
     flexDirection: "row",
     flexWrap: "wrap",
