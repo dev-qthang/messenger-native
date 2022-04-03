@@ -33,6 +33,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-native": "^0.67.4",
+    "react-native-dotenv": "^3.3.1",
     "react-native-gesture-handler": "~2.1.0",
     "react-native-modal": "^13.0.1",
     "react-native-radio-buttons-group": "^2.2.10",
@@ -43,6 +44,7 @@
     "react-native-vector-icons": "^9.1.0",
     "react-native-web": "^0.17.7",
     "react-redux": "^7.2.6",
-    "redux-devtools-extension": "^2.13.9"
+    "redux-devtools-extension": "^2.13.9",
+    "expo-av": "~10.2.0"
   }
 }

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState } from "react";
 import {
   View,
@@ -7,13 +8,18 @@ import {
   TextInput,
   ScrollView,
 } from "react-native";
+=======
+import React, { useRef, useState } from 'react';
+import { View, Text, TouchableOpacity, Image, TextInput, ScrollView } from 'react-native';
+>>>>>>> 30822c09f051731b8155b25c06313e6fc9ae62b3
 import Icon from "react-native-vector-icons/FontAwesome5";
 import Entypo from "react-native-vector-icons/Entypo";
 import Feather from "react-native-vector-icons/Feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import AntDesign from "react-native-vector-icons/AntDesign";
-import * as ImagePicker from "expo-image-picker";
+import * as ImagePicker from 'expo-image-picker';
+import { Video, AVPlaybackStatus } from 'expo-av';
 
 import { styles } from "./Chat.styles";
 import { colors } from "../../../../theme/colors";
@@ -149,6 +155,8 @@ const Body = () => {
 const Footer = ({ navigation }) => {
   const [text, setText] = useState("");
   const [image, setImage] = useState(null);
+  const video = useRef(null);
+  const [videoUri, setVideoUri] = useState(null);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -160,8 +168,18 @@ const Footer = ({ navigation }) => {
 
     if (!result.cancelled) {
       setImage(result.uri);
+      console.log(result.uri)
     }
   };
+
+  const onSendImage = () => {
+    console.log("Image: ", image);
+    setImage(null);
+  };
+
+  const onSendVideo = () => {
+    setVideoUri(null);
+  }
 
   return (
     <View style={styles.footer}>
@@ -169,7 +187,15 @@ const Footer = ({ navigation }) => {
         <Entypo name="grid" style={{ fontSize: 36, color: colors.mainColor }} />
       </TouchableOpacity>
 
+<<<<<<< HEAD
       <TouchableOpacity onPress={() => navigation.navigate("Camera")}>
+=======
+      <TouchableOpacity onPress={() => navigation.navigate('Camera', {
+        image,
+        setImage,
+        setVideoUri,
+      })}>
+>>>>>>> 30822c09f051731b8155b25c06313e6fc9ae62b3
         <FontAwesome name="camera" style={styles.icon} />
       </TouchableOpacity>
 
@@ -197,6 +223,56 @@ const Footer = ({ navigation }) => {
       <TouchableOpacity>
         <AntDesign name="like1" style={styles.icon} />
       </TouchableOpacity>
+
+      {image && 
+        <View style={styles.preview}>
+          <TouchableOpacity 
+            style={styles.previewClose}
+            onPress={() => setImage(null)}
+          >
+            <AntDesign name="close" style={{ color: colors.white, fontSize: 20 }} />
+          </TouchableOpacity>
+          <Image 
+            source={{ uri: image } || images.avatar }
+            style={styles.previewImg}
+          />
+          <TouchableOpacity 
+            style={styles.previewSend}
+            onPress={onSendImage}
+          >
+            <Text style={{ color: colors.white }}>Send</Text>
+            <Ionicons name="send" style={{ color: colors.white, marginLeft: 4 }} />
+          </TouchableOpacity>
+        </View>
+      }
+      {
+        videoUri &&
+        <View style={styles.preview}>
+          <TouchableOpacity 
+            style={styles.previewClose}
+            onPress={() => setVideoUri(null)}
+          >
+            <AntDesign name="close" style={{ color: colors.white, fontSize: 20 }} />
+          </TouchableOpacity>
+          <Video
+            ref={video}
+            style={styles.previewVideo}
+            source={{
+              uri: videoUri,
+            }}
+            useNativeControls
+            resizeMode="contain"
+            isLooping
+          />
+         <TouchableOpacity 
+            style={styles.previewSend}
+            onPress={onSendVideo}
+          >
+            <Text style={{ color: colors.white }}>Send</Text>
+            <Ionicons name="send" style={{ color: colors.white, marginLeft: 4 }} />
+          </TouchableOpacity>
+        </View>
+      }
     </View>
   );
 };
