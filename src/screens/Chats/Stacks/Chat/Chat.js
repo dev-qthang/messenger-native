@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   View,
   Text,
@@ -8,18 +7,14 @@ import {
   TextInput,
   ScrollView,
 } from "react-native";
-=======
-import React, { useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, TextInput, ScrollView } from 'react-native';
->>>>>>> 30822c09f051731b8155b25c06313e6fc9ae62b3
 import Icon from "react-native-vector-icons/FontAwesome5";
 import Entypo from "react-native-vector-icons/Entypo";
 import Feather from "react-native-vector-icons/Feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import AntDesign from "react-native-vector-icons/AntDesign";
-import * as ImagePicker from 'expo-image-picker';
-import { Video, AVPlaybackStatus } from 'expo-av';
+import * as ImagePicker from "expo-image-picker";
+import { Video, AVPlaybackStatus } from "expo-av";
 
 import { styles } from "./Chat.styles";
 import { colors } from "../../../../theme/colors";
@@ -168,7 +163,7 @@ const Footer = ({ navigation }) => {
 
     if (!result.cancelled) {
       setImage(result.uri);
-      console.log(result.uri)
+      console.log(result.uri);
     }
   };
 
@@ -179,7 +174,7 @@ const Footer = ({ navigation }) => {
 
   const onSendVideo = () => {
     setVideoUri(null);
-  }
+  };
 
   return (
     <View style={styles.footer}>
@@ -187,15 +182,15 @@ const Footer = ({ navigation }) => {
         <Entypo name="grid" style={{ fontSize: 36, color: colors.mainColor }} />
       </TouchableOpacity>
 
-<<<<<<< HEAD
-      <TouchableOpacity onPress={() => navigation.navigate("Camera")}>
-=======
-      <TouchableOpacity onPress={() => navigation.navigate('Camera', {
-        image,
-        setImage,
-        setVideoUri,
-      })}>
->>>>>>> 30822c09f051731b8155b25c06313e6fc9ae62b3
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate("Camera", {
+            image,
+            setImage,
+            setVideoUri,
+          })
+        }
+      >
         <FontAwesome name="camera" style={styles.icon} />
       </TouchableOpacity>
 
@@ -224,35 +219,40 @@ const Footer = ({ navigation }) => {
         <AntDesign name="like1" style={styles.icon} />
       </TouchableOpacity>
 
-      {image && 
+      {image && (
         <View style={styles.preview}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.previewClose}
             onPress={() => setImage(null)}
           >
-            <AntDesign name="close" style={{ color: colors.white, fontSize: 20 }} />
+            <AntDesign
+              name="close"
+              style={{ color: colors.white, fontSize: 20 }}
+            />
           </TouchableOpacity>
-          <Image 
-            source={{ uri: image } || images.avatar }
+          <Image
+            source={{ uri: image } || images.avatar}
             style={styles.previewImg}
           />
-          <TouchableOpacity 
-            style={styles.previewSend}
-            onPress={onSendImage}
-          >
+          <TouchableOpacity style={styles.previewSend} onPress={onSendImage}>
             <Text style={{ color: colors.white }}>Send</Text>
-            <Ionicons name="send" style={{ color: colors.white, marginLeft: 4 }} />
+            <Ionicons
+              name="send"
+              style={{ color: colors.white, marginLeft: 4 }}
+            />
           </TouchableOpacity>
         </View>
-      }
-      {
-        videoUri &&
+      )}
+      {videoUri && (
         <View style={styles.preview}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.previewClose}
             onPress={() => setVideoUri(null)}
           >
-            <AntDesign name="close" style={{ color: colors.white, fontSize: 20 }} />
+            <AntDesign
+              name="close"
+              style={{ color: colors.white, fontSize: 20 }}
+            />
           </TouchableOpacity>
           <Video
             ref={video}
@@ -264,15 +264,15 @@ const Footer = ({ navigation }) => {
             resizeMode="contain"
             isLooping
           />
-         <TouchableOpacity 
-            style={styles.previewSend}
-            onPress={onSendVideo}
-          >
+          <TouchableOpacity style={styles.previewSend} onPress={onSendVideo}>
             <Text style={{ color: colors.white }}>Send</Text>
-            <Ionicons name="send" style={{ color: colors.white, marginLeft: 4 }} />
+            <Ionicons
+              name="send"
+              style={{ color: colors.white, marginLeft: 4 }}
+            />
           </TouchableOpacity>
         </View>
-      }
+      )}
     </View>
   );
 };
