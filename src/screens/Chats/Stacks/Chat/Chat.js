@@ -1,89 +1,151 @@
-import React, { useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, TextInput, ScrollView } from 'react-native';
+import React, { useRef, useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  TextInput,
+  ScrollView,
+} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import Entypo from "react-native-vector-icons/Entypo";
 import Feather from "react-native-vector-icons/Feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import AntDesign from "react-native-vector-icons/AntDesign";
-import * as ImagePicker from 'expo-image-picker';
-import { Video, AVPlaybackStatus } from 'expo-av';
+import * as ImagePicker from "expo-image-picker";
+import { Video, AVPlaybackStatus } from "expo-av";
 
-import { styles } from './Chat.styles';
-import { colors } from '../../../../theme/colors';
-import { images } from '../../../../images';
+import { styles } from "./Chat.styles";
+import { colors } from "../../../../theme/colors";
+import { images } from "../../../../images";
 
-import { LeftMessage, RightMessage } from '../Message/Message';
+import { LeftMessage, RightMessage } from "../Message/Message";
+import { useSelector } from "react-redux";
 
 const Header = ({ navigation }) => {
+  const auth = useSelector((state) => state.auth);
+  const user = useSelector((state) => state.user);
   return (
     <View style={styles.header}>
-      <TouchableOpacity onPress={() => navigation.navigate('Chats')}>
+      <TouchableOpacity onPress={() => navigation.navigate("Chats")}>
         <Feather name="chevron-left" style={styles.backIcon} />
       </TouchableOpacity>
 
       <View style={styles.headerInfo}>
-        <TouchableOpacity 
-          activeOpacity={.6} 
-          style={{flexDirection: "row"}}
-          onPress={() => navigation.navigate("ConversationSettings", {
-            avatar: images.avatar,
-            userInfo: { username: "Alex", status: "Active" }
-          })}
+        <TouchableOpacity
+          activeOpacity={0.6}
+          style={{ flexDirection: "row" }}
+          onPress={() =>
+            navigation.navigate("ConversationSettings", {
+              avatar: images.avatar,
+              userInfo: { username: auth.firstName, status: "Active" },
+            })
+          }
         >
-          <Image source={images.avatar} style={styles.header_avatarIcon} />
+          <Image source={user.avatar} style={styles.header_avatarIcon} />
           <View>
-            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Username</Text>
+            <Text style={{ fontSize: 16, fontWeight: "bold" }}>Username</Text>
             <Text style={{ fontSize: 12 }}>Status</Text>
           </View>
         </TouchableOpacity>
       </View>
 
       <View style={styles.header_actions}>
-        <TouchableOpacity onPress={() => { console.log('Call pressed') }}>
+        <TouchableOpacity
+          onPress={() => {
+            console.log("Call pressed");
+          }}
+        >
           <FontAwesome name="phone" style={styles.icon} />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => { console.log('Video pressed') }}>
+        <TouchableOpacity
+          onPress={() => {
+            console.log("Video pressed");
+          }}
+        >
           <FontAwesome name="video-camera" style={styles.icon} />
         </TouchableOpacity>
       </View>
     </View>
-  )
-}
+  );
+};
 
 const Body = () => {
   const leftData = {
     imgSource: images.default_avatar,
     arrMessage: [
-      { id: 0, value: "We re-created Facebook Messenger UI design to help designers and developers visualizee" },
-      { id: 1, value: "We re-created Facebook Messenger UI design to help designers and developers visualizee" },
-      { id: 2, value: "We re-created Facebook Messenger UI design to help designers and developers visualizee" },
-    ]
+      {
+        id: 0,
+        value:
+          "We re-created Facebook Messenger UI design to help designers and developers visualizee",
+      },
+      {
+        id: 1,
+        value:
+          "We re-created Facebook Messenger UI design to help designers and developers visualizee",
+      },
+      {
+        id: 2,
+        value:
+          "We re-created Facebook Messenger UI design to help designers and developers visualizee",
+      },
+    ],
   };
 
   const rightData = {
     imgSource: images.default_avatar,
     arrMessage: [
-      { id: 0, value: "We re-created Facebook Messenger UI design to help designers and developers visualizee" },
-      { id: 1, value: "We re-created Facebook Messenger UI design to help designers and developers visualizee" },
-      { id: 2, value: "We re-created Facebook Messenger UI design to help designers and developers visualizee" },
-    ]
-  }
+      {
+        id: 0,
+        value:
+          "We re-created Facebook Messenger UI design to help designers and developers visualizee",
+      },
+      {
+        id: 1,
+        value:
+          "We re-created Facebook Messenger UI design to help designers and developers visualizee",
+      },
+      {
+        id: 2,
+        value:
+          "We re-created Facebook Messenger UI design to help designers and developers visualizee",
+      },
+    ],
+  };
 
   return (
     <View style={styles.body}>
       <ScrollView>
-        <LeftMessage imgSource={leftData.imgSource} arrMessages={leftData.arrMessage} />
-        <RightMessage imgSource={rightData.imgSource} arrMessages={rightData.arrMessage} />
-        <LeftMessage imgSource={leftData.imgSource} arrMessages={leftData.arrMessage} />
-        <RightMessage imgSource={rightData.imgSource} arrMessages={rightData.arrMessage} />
-        <LeftMessage imgSource={leftData.imgSource} arrMessages={leftData.arrMessage} />
-        <RightMessage imgSource={rightData.imgSource} arrMessages={rightData.arrMessage} />
+        <LeftMessage
+          imgSource={leftData.imgSource}
+          arrMessages={leftData.arrMessage}
+        />
+        <RightMessage
+          imgSource={rightData.imgSource}
+          arrMessages={rightData.arrMessage}
+        />
+        <LeftMessage
+          imgSource={leftData.imgSource}
+          arrMessages={leftData.arrMessage}
+        />
+        <RightMessage
+          imgSource={rightData.imgSource}
+          arrMessages={rightData.arrMessage}
+        />
+        <LeftMessage
+          imgSource={leftData.imgSource}
+          arrMessages={leftData.arrMessage}
+        />
+        <RightMessage
+          imgSource={rightData.imgSource}
+          arrMessages={rightData.arrMessage}
+        />
       </ScrollView>
     </View>
-  )
-}
+  );
+};
 
 const Footer = ({ navigation }) => {
   const [text, setText] = useState("");
@@ -101,7 +163,7 @@ const Footer = ({ navigation }) => {
 
     if (!result.cancelled) {
       setImage(result.uri);
-      console.log(result.uri)
+      console.log(result.uri);
     }
   };
 
@@ -112,7 +174,7 @@ const Footer = ({ navigation }) => {
 
   const onSendVideo = () => {
     setVideoUri(null);
-  }
+  };
 
   return (
     <View style={styles.footer}>
@@ -120,11 +182,15 @@ const Footer = ({ navigation }) => {
         <Entypo name="grid" style={{ fontSize: 36, color: colors.mainColor }} />
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('Camera', {
-        image,
-        setImage,
-        setVideoUri,
-      })}>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate("Camera", {
+            image,
+            setImage,
+            setVideoUri,
+          })
+        }
+      >
         <FontAwesome name="camera" style={styles.icon} />
       </TouchableOpacity>
 
@@ -153,35 +219,40 @@ const Footer = ({ navigation }) => {
         <AntDesign name="like1" style={styles.icon} />
       </TouchableOpacity>
 
-      {image && 
+      {image && (
         <View style={styles.preview}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.previewClose}
             onPress={() => setImage(null)}
           >
-            <AntDesign name="close" style={{ color: colors.white, fontSize: 20 }} />
+            <AntDesign
+              name="close"
+              style={{ color: colors.white, fontSize: 20 }}
+            />
           </TouchableOpacity>
-          <Image 
-            source={{ uri: image } || images.avatar }
+          <Image
+            source={{ uri: image } || images.avatar}
             style={styles.previewImg}
           />
-          <TouchableOpacity 
-            style={styles.previewSend}
-            onPress={onSendImage}
-          >
+          <TouchableOpacity style={styles.previewSend} onPress={onSendImage}>
             <Text style={{ color: colors.white }}>Send</Text>
-            <Ionicons name="send" style={{ color: colors.white, marginLeft: 4 }} />
+            <Ionicons
+              name="send"
+              style={{ color: colors.white, marginLeft: 4 }}
+            />
           </TouchableOpacity>
         </View>
-      }
-      {
-        videoUri &&
+      )}
+      {videoUri && (
         <View style={styles.preview}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.previewClose}
             onPress={() => setVideoUri(null)}
           >
-            <AntDesign name="close" style={{ color: colors.white, fontSize: 20 }} />
+            <AntDesign
+              name="close"
+              style={{ color: colors.white, fontSize: 20 }}
+            />
           </TouchableOpacity>
           <Video
             ref={video}
@@ -193,18 +264,18 @@ const Footer = ({ navigation }) => {
             resizeMode="contain"
             isLooping
           />
-         <TouchableOpacity 
-            style={styles.previewSend}
-            onPress={onSendVideo}
-          >
+          <TouchableOpacity style={styles.previewSend} onPress={onSendVideo}>
             <Text style={{ color: colors.white }}>Send</Text>
-            <Ionicons name="send" style={{ color: colors.white, marginLeft: 4 }} />
+            <Ionicons
+              name="send"
+              style={{ color: colors.white, marginLeft: 4 }}
+            />
           </TouchableOpacity>
         </View>
-      }
+      )}
     </View>
-  )
-}
+  );
+};
 
 const Chat = ({ navigation }) => {
   return (
@@ -213,7 +284,7 @@ const Chat = ({ navigation }) => {
       <Body />
       <Footer navigation={navigation} />
     </View>
-  )
+  );
 };
 
 export default Chat;

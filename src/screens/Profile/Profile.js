@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -15,28 +15,19 @@ import Feather from "react-native-vector-icons/Feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { colors } from "../../theme/colors";
-import { useSelector } from "react-redux";
-
-const data = {
-  name: "Nguyen Quyet Thang",
-  bio: "Dang lam profile",
-  branch: "Information of Technology (IT)",
-  school: "Trường Đại học Công nghệ - Đại học Quốc gia Hà Nội",
-  highSchool: "THPT Lạc Thuỷ A",
-  lives: "Ha Noi, Vietnam",
-  address: "Chi Nê, Hoà Bình, Vietnam",
-  instagram: "q.thangg_13",
-  github: "include-cookieguy",
-};
+import { useDispatch, useSelector } from "react-redux";
+import { ScrollView } from "react-native-gesture-handler";
 
 const Profile = ({ navigation }) => {
-  const userInfo = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user);
+  const auth = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.wallpaperContainer}>
         <Image
-          source={{ uri: userInfo.wallpaper } || images.wallpaper}
+          source={{ uri: user.wallpaper } || images.wallpaper}
           style={styles.coverPhoto}
         />
         <Image source={images.take_photo} style={styles.cameraWallpaper} />
@@ -44,7 +35,7 @@ const Profile = ({ navigation }) => {
       <View style={styles.dpContainer}>
         <View style={styles.dpBlueRound}>
           <Image
-            source={{ uri: userInfo.avatar } || images.avatar}
+            source={{ uri: user.avatar } || images.avatar}
             style={styles.dp}
           />
           {/* <View style={styles.activeNowTick}></View> */}
@@ -52,8 +43,8 @@ const Profile = ({ navigation }) => {
         </View>
       </View>
 
-      <Text style={styles.name}>{userInfo.name}</Text>
-      <Text style={styles.shortBio}>{userInfo.bio}</Text>
+      <Text style={styles.name}>{user.firstName + " " + user.lastName}</Text>
+      <Text style={styles.shortBio}>{user.bio}</Text>
 
       <View style={styles.profileTabsContainer}>
         <View style={styles.tabContainer}>
@@ -92,19 +83,23 @@ const Profile = ({ navigation }) => {
       </View>
 
       <View style={styles.aboutContainer}>
-        <View style={styles.aboutItem}>
-          <Ionicons name="school" style={styles.iconAbout} />
-          <Text style={styles.containerText}>
-            <Text style={styles.normalText}>Studies {data.branch} at </Text>
-            <Text style={styles.boldText}>{data.school}</Text>
-          </Text>
-        </View>
+        {user.schools?.map((school, index) => (
+          <View style={styles.aboutItem} key={index}>
+            <Text style={styles.containerText}>
+              <Ionicons name="school" style={styles.iconAbout} />
+              <Text style={styles.normalText}>
+                {school.graduated ? "Studied" : "Studies"} {school.major} at
+              </Text>
+              <Text style={styles.boldText}>{school.schoolName}</Text>
+            </Text>
+          </View>
+        ))}
 
         <View style={styles.aboutItem}>
           <Ionicons name="school" style={styles.iconAbout} />
           <Text style={styles.containerText}>
             <Text style={styles.normalText}>Went to </Text>
-            <Text style={styles.boldText}>{data.highSchool}</Text>
+            <Text style={styles.boldText}>{user.highSchool}</Text>
           </Text>
         </View>
 
@@ -112,7 +107,7 @@ const Profile = ({ navigation }) => {
           <Ionicons name="home" style={styles.iconAbout} />
           <Text style={styles.containerText}>
             <Text style={styles.normalText}>Lives in </Text>
-            <Text style={styles.boldText}>{data.lives}</Text>
+            <Text style={styles.boldText}>{user.lives}</Text>
           </Text>
         </View>
 
@@ -120,7 +115,7 @@ const Profile = ({ navigation }) => {
           <Entypo name="address" style={styles.iconAbout} />
           <Text style={styles.containerText}>
             <Text style={styles.normalText}>From </Text>
-            <Text style={styles.boldText}>{data.address}</Text>
+            <Text style={styles.boldText}>{user.address}</Text>
           </Text>
         </View>
 
@@ -134,10 +129,10 @@ const Profile = ({ navigation }) => {
                 textDecorationLine: "underline",
               }}
               onPress={() =>
-                Linking.openURL(`https://www.instagram.com/${data.instagram}`)
+                Linking.openURL(`https://www.instagram.com/${user.instagram}`)
               }
             >
-              {data.instagram}
+              {user.instagram}
             </Text>
           </Text>
         </View>
@@ -152,15 +147,15 @@ const Profile = ({ navigation }) => {
                 textDecorationLine: "underline",
               }}
               onPress={() =>
-                Linking.openURL(`https://www.github.com/${data.github}`)
+                Linking.openURL(`https://www.github.com/${user.github}`)
               }
             >
-              {data.github}
+              {user.github}
             </Text>
           </Text>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

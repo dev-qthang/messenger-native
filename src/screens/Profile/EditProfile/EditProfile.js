@@ -60,7 +60,7 @@ const EditProfile = ({ navigation }) => {
     address: "",
     instagram: "",
     github: "",
-    gender: "Male",
+    gender: "",
     dateOfBirth: "",
   });
   const [modalVisible, setModalVisible] = useState({

@@ -46,5 +46,5 @@ export const images = {
   more: require("./images/more.png"),
   default_avatar: require("./images/default_avatar.jpg"),
   Logo: require("./images/logo.png"),
-  LogoFrame: require('./images/logo-frame.png'),
+  LogoFrame: require("./images/logo-frame.png"),
 };
