@@ -7,6 +7,7 @@ import {
   Linking,
   ScrollView,
   TouchableOpacity,
+  Button,
   TextInput,
 } from "react-native";
 import { images } from "../../../images";
@@ -17,12 +18,11 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Entypo from "react-native-vector-icons/Entypo";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { editAttributeUser } from "../../../redux/userSlice";
+import { editAttributeUser, upload } from "../../../redux/userSlice";
 import Modal from "react-native-modal";
 import UserPermissions from "../../../utils/UserPermissions";
 import * as ImagePicker from "expo-image-picker";
 import { Camera } from "expo-camera";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const data = {
   name: "Nguyen Quyet Thang",
@@ -46,20 +46,16 @@ const EditProfile = ({ navigation }) => {
       "https://i.pinimg.com/736x/f4/f9/1c/f4f91c394261080ff096d7c7843eb4c7.jpg",
     name: "",
     bio: "",
-    schools: {
-      schoolName: "",
-      branch: "",
-      graduated: false,
-    },
-    workPlaces: {
-      workPlaceName: "",
-      position: "",
-      currentlyWorking: false,
-    },
+    schools: [],
+    workPlaces: [],
     lives: "",
+    linked: {
+      instagram: "",
+      github: "",
+      facebook: "",
+      linkedIn: "",
+    },
     address: "",
-    instagram: "",
-    github: "",
     gender: "",
     dateOfBirth: "",
   });
@@ -70,6 +66,7 @@ const EditProfile = ({ navigation }) => {
   });
 
   const userInfo = useSelector((state) => state.user);
+  const auth = useSelector((state) => state.auth);
 
   const handleData = (field, text) => {
     setInfo({ ...info, [field]: text });
@@ -102,6 +99,8 @@ const EditProfile = ({ navigation }) => {
         aspect: [4, 3],
       });
 
+      console.log(result);
+
       if (!result.cancelled) {
         if (type === "avatar") {
           setInfo({ ...info, avatar: result.uri });
@@ -124,6 +123,11 @@ const EditProfile = ({ navigation }) => {
             onPress={() => navigation.navigate("Profile")}
           />
           <Text style={styles.headerText}>Edit Profile</Text>
+          <TouchableOpacity
+            onPress={() => dispatch(upload(info.avatar, "image", auth.token))}
+          >
+            <Text>Submit</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.editContainer}>
