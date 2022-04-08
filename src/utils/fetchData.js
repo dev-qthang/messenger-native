@@ -1,8 +1,9 @@
 import axios from "axios";
-import { SERVER_URL, TUAN } from "@env";
+import { SERVER_URL } from "@env";
+import { url } from "../../env";
 
 const instance = axios.create({
-  baseURL: "http://10.90.84.126:5000/api/",
+  baseURL: `http://${url}:5000/api/`,
 });
 
 export const getDataAPI = async (url, token) => {
@@ -14,7 +15,6 @@ export const getDataAPI = async (url, token) => {
 
 export const postDataAPI = async (url, post, token) => {
   console.log("Server url: ", SERVER_URL);
-  console.log(TUAN);
 
   const res = await instance.post(url, post, {
     headers: { Authorization: token },
