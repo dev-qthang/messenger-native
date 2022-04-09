@@ -3,39 +3,34 @@ import { postDataAPI, getDataAPI } from "../utils/fetchData";
 import { SERVER_URL } from "@env";
 
 const userSlice = createSlice({
-  name: "user",
-  initialState: {},
+  name: "upload",
+  initialState: {
+    image: "",
+    video: "",
+  },
   reducers: {
-    getInfo(state, action) {
-      return action.payload;
+    getImageUrl(state) {
+      return state.image;
     },
-    editAttributeUser(state, action) {
-      return { ...state, [action.payload.type]: action.payload.data };
+    setImageUrl(state, action) {
+      state.image = action.payload;
     },
-
-    removeAttributeUser(state, action) {
-      delete state[action.payload];
+    getVideoUrl(state) {
+      return state.video;
+    },
+    setVideoUrl(state, action) {
+      state.video = action.payload;
     },
   },
 });
 
-export const getUserInfo = (auth) => async (dispatch) => {
-  try {
-    const res = await getDataAPI("user", auth);
-
-    dispatch(getInfo(res.data));
-  } catch (e) {
-    console.log(e);
-  }
-};
-
-export const upload = (uri, type, token) => async (dispatch) => {
+export const uploadFile = (uri, type, token) => async (dispatch) => {
   try {
     const formData = new FormData();
 
     formData.append("image", {
       uri: uri,
-      type: "image/jpg",
+      type: type == "image" ? "image/jpg" : "video/mp4",
       name: "new_file",
     });
     const response = await fetch(`${SERVER_URL}upload/${type.toLowerCase()}`, {
@@ -49,14 +44,23 @@ export const upload = (uri, type, token) => async (dispatch) => {
     });
 
     let resJson = await response.json();
-    console.log("Url: ", resJson.url);
-    return resJson.url;
+
+    const newFileUrl = resJson.url;
+
+    //  TODO: lưu ảnh/video vừa upload vào database
+
+    if (type == "image") {
+      dispatch(setImageUrl(newFileUrl));
+    } else {
+      dispatch(setVideoUrl(newFileUrl));
+    }
   } catch (err) {
     console.log(err);
   }
 };
 
 const { actions, reducer } = userSlice;
-export const { getInfo, editAttributeUser, removeAttributeUser } = actions;
+
+export const { getImageUrl, setImageUrl, getVideoUrl, setVideoUrl } = actions;
 
 export default reducer;

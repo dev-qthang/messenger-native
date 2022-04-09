@@ -2,7 +2,7 @@ import axios from "axios";
 import { SERVER_URL, TUAN } from "@env";
 
 const instance = axios.create({
-  baseURL: "http://10.90.84.126:5000/api/",
+  baseURL: "http://192.168.1.42:5000/api/",
 });
 
 export const getDataAPI = async (url, token) => {
