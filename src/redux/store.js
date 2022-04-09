@@ -4,6 +4,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import userSlice from "./userSlice";
 import themeSlice from "./themeSlice";
 import authSlice from "./authSlice";
+import uploadSlice from "./uploadSlice";
 
 const composedEnhancers = composeWithDevTools();
 
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   user: userSlice,
   theme: themeSlice,
   auth: authSlice,
+  upload: uploadSlice,
 });
 
 const store = configureStore({
