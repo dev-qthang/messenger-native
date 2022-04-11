@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { postDataAPI, getDataAPI } from "../utils/fetchData";
 import { SERVER_URL } from "@env";
 
-const userSlice = createSlice({
+const uploadSlice = createSlice({
   name: "upload",
   initialState: {
     image: "",
@@ -45,6 +45,8 @@ export const uploadFile = (uri, type, token) => async (dispatch) => {
 
     let resJson = await response.json();
 
+    console.log(resJson);
+
     const newFileUrl = resJson.url;
 
     //  TODO: lưu ảnh/video vừa upload vào database
@@ -59,7 +61,7 @@ export const uploadFile = (uri, type, token) => async (dispatch) => {
   }
 };
 
-const { actions, reducer } = userSlice;
+const { actions, reducer } = uploadSlice;
 
 export const { getImageUrl, setImageUrl, getVideoUrl, setVideoUrl } = actions;
 

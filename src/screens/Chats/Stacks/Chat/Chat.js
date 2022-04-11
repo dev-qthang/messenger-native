@@ -15,7 +15,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import * as ImagePicker from "expo-image-picker";
 import { Video } from "expo-av";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { styles } from "./Chat.styles";
 import { colors } from "../../../../theme/colors";
@@ -156,6 +156,7 @@ const Footer = ({ navigation }) => {
   const [videoUri, setVideoUri] = useState(null);
 
   const { token } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -172,12 +173,12 @@ const Footer = ({ navigation }) => {
   };
 
   const onSendImage = () => {
-    uploadFile(image, "image", token);
+    dispatch(uploadFile(image, "image", token));
     setImage(null);
   };
 
   const onSendVideo = () => {
-    uploadFile(image, "video", token);
+    dispatch(uploadFile(image, "video", token));
     setVideoUri(null);
   };
 
