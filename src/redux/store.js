@@ -6,6 +6,7 @@ import themeSlice from "./themeSlice";
 import authSlice from "./authSlice";
 import uploadSlice from "./uploadSlice";
 import messageSlice from "./messageSlice";
+import conversationSlice from "./conversationSlice";
 
 const composedEnhancers = composeWithDevTools();
 
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   auth: authSlice,
   upload: uploadSlice,
   message: messageSlice,
+  conversation: conversationSlice,
 });
 
 const store = configureStore({
