@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 
 import { SwipeListView } from "react-native-swipe-list-view";
@@ -6,58 +7,26 @@ import { SwipeListView } from "react-native-swipe-list-view";
 import { styles } from "./UserListing.styles";
 import { images } from "../../../images";
 
-const Data = [
-  {
-    id: 1,
-    name: "Martin Randolph",
-    image: images.user_1,
-    lastMessage: "You: What’s man! · 9:40 AM ",
-  },
-  {
-    id: 2,
-    name: "Andrew Parker",
-    image: images.user_2,
-    lastMessage: "You: Ok, thanks! · 9:25 AM ",
-  },
-  {
-    id: 3,
-    name: "Karen Castillo",
-    image: images.user_3,
-    lastMessage: "You: Ok, See you in To… · Fri",
-  },
-  {
-    id: 4,
-    name: "Maisy Humphrey",
-    image: images.user_4,
-    lastMessage: "Have a good day, Maisy! · Fri",
-  },
-  {
-    id: 5,
-    name: "Joshua Lawrence",
-    image: images.user_5,
-    lastMessage: "The business plan loo…  · Thu ",
-  },
-  {
-    id: 6,
-    name: "Karen Castillo",
-    image: images.user_3,
-    lastMessage: "You: Ok, See you in To… · Fri",
-  },
-  {
-    id: 7,
-    name: "Maisy Humphrey",
-    image: images.user_4,
-    lastMessage: "Have a good day, Maisy! · Fri",
-  },
-  {
-    id: 8,
-    name: "Joshua Lawrence",
-    image: images.user_5,
-    lastMessage: "The business plan loo…  · Thu ",
-  },
-];
-
 const UserListing = ({ navigation }) => {
+  // let Data = [
+  //   {
+  //     id: 1,
+  //     name: "Martin Randolph",
+  //     image: images.user_1,
+  //     lastMessage: "You: What’s man! · 9:40 AM ",
+  //   },
+  // ];
+
+  let Data = useSelector((state) => state.conversation.conversations);
+  Data = Data.map((c) => {
+    return {
+      id: c._id,
+      name: c.title,
+      image: images.user_1,
+      lastMessage: "Test ",
+    };
+  });
+
   const renderHiddenItem = (data, rowMap) => (
     <View style={styles.rowBack}>
       <View style={styles.itemRowWrapper}>
@@ -78,7 +47,10 @@ const UserListing = ({ navigation }) => {
 
   const renderItem = ({ item }) => {
     return (
-      <TouchableOpacity activeOpacity={1} onPress={() => navigation.navigate('Chat')}>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={() => navigation.navigate("Chat")}
+      >
         <View style={styles.userItemContainer}>
           <Image source={item.image} style={styles.userIcon} />
           <View style={styles.userDetailsSectionContainer}>
