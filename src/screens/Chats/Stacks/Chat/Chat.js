@@ -14,14 +14,16 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import * as ImagePicker from "expo-image-picker";
-import { Video, AVPlaybackStatus } from "expo-av";
+import { Video } from "expo-av";
+import { useDispatch, useSelector } from "react-redux";
 
 import { styles } from "./Chat.styles";
 import { colors } from "../../../../theme/colors";
 import { images } from "../../../../images";
 
 import { LeftMessage, RightMessage } from "../Message/Message";
-import { useSelector } from "react-redux";
+
+import { uploadFile } from "../../../../redux/uploadSlice";
 
 const Header = ({ navigation }) => {
   const auth = useSelector((state) => state.auth);
@@ -153,6 +155,9 @@ const Footer = ({ navigation }) => {
   const video = useRef(null);
   const [videoUri, setVideoUri] = useState(null);
 
+  const { token } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -168,11 +173,12 @@ const Footer = ({ navigation }) => {
   };
 
   const onSendImage = () => {
-    console.log("Image: ", image);
+    dispatch(uploadFile(image, "image", token));
     setImage(null);
   };
 
   const onSendVideo = () => {
+    dispatch(uploadFile(image, "video", token));
     setVideoUri(null);
   };
 

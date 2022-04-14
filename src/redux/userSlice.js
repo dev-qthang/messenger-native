@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { postDataAPI, getDataAPI } from "../utils/fetchData";
-import axios from "axios";
 import { SERVER_URL } from "@env";
 
 const userSlice = createSlice({
@@ -30,29 +29,28 @@ export const getUserInfo = (auth) => async (dispatch) => {
   }
 };
 
-export const upload = (file, type, token) => async (dispatch) => {
-  const formData = new FormData();
-  console.log(type, file);
-  formData.append("image", {
-    name: "image",
-    uri: file,
-    type: "image/jpg",
-  });
+export const upload = (uri, type, token) => async (dispatch) => {
   try {
-    const response = await axios.post(
-      `${SERVER_URL}upload/${type.toLowerCase()}`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Accept: "application/json",
-          Authorization: token,
-        },
-      }
-    );
+    const formData = new FormData();
 
-    console.log(response);
-    return response.data.url;
+    formData.append("image", {
+      uri: uri,
+      type: "image/jpg",
+      name: "new_file",
+    });
+    const response = await fetch(`${SERVER_URL}upload/${type.toLowerCase()}`, {
+      method: "post",
+      body: formData,
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Accept: "application/json",
+        Authorization: token,
+      },
+    });
+
+    let resJson = await response.json();
+    console.log("Url: ", resJson.url);
+    return resJson.url;
   } catch (err) {
     console.log(err);
   }

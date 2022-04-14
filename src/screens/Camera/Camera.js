@@ -8,7 +8,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import AntDesign from "react-native-vector-icons/AntDesign";
 
 import { colors } from "../../theme/colors";
-import { styles } from "./Camera.styles"
+import { styles } from "./Camera.styles";
 
 export default function CameraScreen({ navigation, route }) {
   const { setImage, setVideoUri } = route.params;
@@ -22,10 +22,10 @@ export default function CameraScreen({ navigation, route }) {
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(status === 'granted');
+      setHasPermission(status === "granted");
     })();
   }, []);
-  
+
   if (hasPermission === null) {
     return <View />;
   }
@@ -39,45 +39,43 @@ export default function CameraScreen({ navigation, route }) {
     }
   };
 
-  const onPictureSaved = photo => {
-      setImage(photo.uri);
-      navigation.navigate("Chat");
+  const onPictureSaved = (photo) => {
+    setImage(photo.uri);
+    navigation.navigate("Chat");
   };
 
   const onVideoRecordPress = async () => {
     await Audio.requestPermissionsAsync();
 
-    if(!recording) {
-      setRecording(true)
+    if (!recording) {
+      setRecording(true);
       let video = await camera.recordAsync();
       setVideoUri(video.uri);
       navigation.navigate("Chat");
     } else {
-      setRecording(false)
-      camera.stopRecording()
+      setRecording(false);
+      camera.stopRecording();
     }
     console.log("Is recording: ", recording);
-  }
+  };
 
   return (
     <View style={styles.container}>
-      <Camera 
-        style={styles.camera} 
-        type={type} 
-        ref={ref => setCamera(ref)}
+      <Camera
+        style={styles.camera}
+        type={type}
+        ref={(ref) => setCamera(ref)}
         ratio={"18:9"}
       >
         <View style={styles.headerButton}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Chat")}
-          >
+          <TouchableOpacity onPress={() => navigation.navigate("Chat")}>
             <AntDesign name="close" style={{ fontSize: 40 }} />
           </TouchableOpacity>
         </View>
 
         <View style={styles.buttonContainer}>
           <View style={styles.button}>
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => {
                 setType(
                   type === Camera.Constants.Type.back
@@ -86,22 +84,25 @@ export default function CameraScreen({ navigation, route }) {
                 );
               }}
             >
-              <MaterialIcons name="flip-camera-android" style={styles.buttonIcon}/>
+              <MaterialIcons
+                name="flip-camera-android"
+                style={styles.buttonIcon}
+              />
             </TouchableOpacity>
           </View>
           <View style={styles.button}>
-            <TouchableOpacity 
-              onPress={takePicture} 
-            >
+            <TouchableOpacity onPress={takePicture}>
               <Ionicons name="radio-button-on" style={styles.buttonIcon} />
             </TouchableOpacity>
           </View>
           <View style={styles.button}>
-            <TouchableOpacity 
-              onPress={onVideoRecordPress} 
-            >
-              <AntDesign name="videocamera" 
-                style={{ fontSize: 50, color: recording ? colors.redColor : colors.white}} 
+            <TouchableOpacity onPress={onVideoRecordPress}>
+              <AntDesign
+                name="videocamera"
+                style={{
+                  fontSize: 50,
+                  color: recording ? colors.redColor : colors.white,
+                }}
               />
             </TouchableOpacity>
           </View>
@@ -109,4 +110,4 @@ export default function CameraScreen({ navigation, route }) {
       </Camera>
     </View>
   );
-};
+}
