@@ -1,14 +1,15 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from "react-native";
 
-import {colors} from '../../theme/colors';
+import { colors } from "../../theme/colors";
 
 export const styles = StyleSheet.create({
   container: {
-    display: 'flex',
+    display: "flex",
     backgroundColor: colors.white,
+    position: "relative",
   },
   contentContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     backgroundColor: colors.gray01,
     padding: 15,
     marginHorizontal: 15,
@@ -18,5 +19,9 @@ export const styles = StyleSheet.create({
     width: 16,
     height: 16,
     marginRight: 15,
+  },
+  containerSearch: {
+    position: "absolute",
+    flexDirection: "column",
   },
 });

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -17,31 +17,68 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { colors } from "../../theme/colors";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollView } from "react-native-gesture-handler";
+import Story from "../../components/Story/Story";
+import { getUserInfo } from "../../redux/userSlice";
 
-const Profile = ({ navigation }) => {
-  const user = useSelector((state) => state.user);
+const Profile = ({ navigation, route }) => {
+  const currentUser = useSelector((state) => state.user.currentUser);
   const auth = useSelector((state) => state.auth);
+  const stories = useSelector((state) => state.story.stories);
+  const [user, setUser] = useState({});
+  const [story, setStory] = useState([]);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const userInfo = route.params?.userInfo;
+    if (userInfo) {
+      setUser(userInfo);
+      const currentStory = stories.filter((e) => e.id === userInfo._id)[0]
+        .stories;
+
+      if (currentStory) setStory(currentStory);
+    } else {
+      setUser(currentUser);
+      const currentStory = stories.filter((e) => e.id === currentUser._id)[0]
+        .stories;
+
+      if (currentStory) setStory(currentStory);
+    }
+  }, [route.params?.userInfo, currentUser]);
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.wallpaperContainer}>
+        <Ionicons
+          name="arrow-back"
+          style={styles.back}
+          onPress={() => navigation.navigate("Chats")}
+        />
         <Image
           source={{ uri: user.wallpaper } || images.wallpaper}
           style={styles.coverPhoto}
         />
         <Image source={images.take_photo} style={styles.cameraWallpaper} />
       </View>
-      <View style={styles.dpContainer}>
+      <TouchableOpacity
+        style={styles.dpContainer}
+        onPress={() =>
+          story.length > 0 &&
+          navigation.navigate("Story", {
+            user: user,
+            image: user.avatar,
+            contentStory: story,
+          })
+        }
+      >
         <View style={styles.dpBlueRound}>
           <Image
             source={{ uri: user.avatar } || images.avatar}
             style={styles.dp}
           />
-          {/* <View style={styles.activeNowTick}></View> */}
+          <View style={styles.activeNowTick}></View>
           <Image source={images.take_photo} style={styles.cameraAvatar} />
         </View>
-      </View>
+      </TouchableOpacity>
 
       <Text style={styles.name}>{user.firstName + " " + user.lastName}</Text>
       <Text style={styles.shortBio}>{user.bio}</Text>
@@ -79,80 +116,6 @@ const Profile = ({ navigation }) => {
             <Feather name="more-horizontal" style={styles.tabImage} />
           </View>
           <Text style={styles.tabText}>More</Text>
-        </View>
-      </View>
-
-      <View style={styles.aboutContainer}>
-        {user.schools?.map((school, index) => (
-          <View style={styles.aboutItem} key={index}>
-            <Text style={styles.containerText}>
-              <Ionicons name="school" style={styles.iconAbout} />
-              <Text style={styles.normalText}>
-                {school.graduated ? "Studied" : "Studies"} {school.major} at
-              </Text>
-              <Text style={styles.boldText}>{school.schoolName}</Text>
-            </Text>
-          </View>
-        ))}
-
-        <View style={styles.aboutItem}>
-          <Ionicons name="school" style={styles.iconAbout} />
-          <Text style={styles.containerText}>
-            <Text style={styles.normalText}>Went to </Text>
-            <Text style={styles.boldText}>{user.highSchool}</Text>
-          </Text>
-        </View>
-
-        <View style={styles.aboutItem}>
-          <Ionicons name="home" style={styles.iconAbout} />
-          <Text style={styles.containerText}>
-            <Text style={styles.normalText}>Lives in </Text>
-            <Text style={styles.boldText}>{user.lives}</Text>
-          </Text>
-        </View>
-
-        <View style={styles.aboutItem}>
-          <Entypo name="address" style={styles.iconAbout} />
-          <Text style={styles.containerText}>
-            <Text style={styles.normalText}>From </Text>
-            <Text style={styles.boldText}>{user.address}</Text>
-          </Text>
-        </View>
-
-        <View style={styles.aboutItem}>
-          <FontAwesome name="instagram" style={styles.iconAbout} />
-          <Text style={styles.containerText}>
-            <Text
-              style={{
-                ...styles.normalText,
-                color: colors.secondColor,
-                textDecorationLine: "underline",
-              }}
-              onPress={() =>
-                Linking.openURL(`https://www.instagram.com/${user.instagram}`)
-              }
-            >
-              {user.instagram}
-            </Text>
-          </Text>
-        </View>
-
-        <View style={styles.aboutItem}>
-          <Ionicons name="logo-github" style={styles.iconAbout} />
-          <Text style={styles.containerText}>
-            <Text
-              style={{
-                ...styles.normalText,
-                color: colors.secondColor,
-                textDecorationLine: "underline",
-              }}
-              onPress={() =>
-                Linking.openURL(`https://www.github.com/${user.github}`)
-              }
-            >
-              {user.github}
-            </Text>
-          </Text>
         </View>
       </View>
     </ScrollView>

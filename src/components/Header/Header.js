@@ -8,7 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { logout } from "../../redux/authSlice";
 
-const Header = ({ heading, icon1, icon2 }) => {
+const Header = ({ heading, icon1, icon2, navigation }) => {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
   const user = useSelector((state) => state.user);
@@ -29,17 +29,20 @@ const Header = ({ heading, icon1, icon2 }) => {
   //   setThemeMode(!themeMode);
   //   dispatch(editTheme(!theme.isDark));
   // };
+  const handleLogout = () => {
+    dispatch(logout());
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.row}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
           <Image style={styles.avatar} source={user.avatar} />
         </TouchableOpacity>
         <Text style={styles.title}>{heading}</Text>
       </View>
       <View style={styles.row}>
-        <TouchableOpacity onPress={() => dispatch(logout())}>
+        <TouchableOpacity onPress={handleLogout}>
           <MaterialIcons name="logout" style={{ fontSize: 26 }} />
         </TouchableOpacity>
         <Image style={styles.icon} source={icon1} />

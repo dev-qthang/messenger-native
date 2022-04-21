@@ -10,12 +10,14 @@ import {
   Button,
   TextInput,
 } from "react-native";
+import { CheckBox } from "react-native-elements";
 import { images } from "../../../images";
 import { styles } from "./EditProfile.styles";
 import { colors } from "../../../theme/colors";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Entypo from "react-native-vector-icons/Entypo";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { editAttributeUser, upload } from "../../../redux/userSlice";
@@ -24,57 +26,23 @@ import UserPermissions from "../../../utils/UserPermissions";
 import * as ImagePicker from "expo-image-picker";
 import { Camera } from "expo-camera";
 
-const data = {
-  name: "Nguyen Quyet Thang",
-  bio: "Dang lam profile",
-  branch: "Information of Technology (IT)",
-  school: "Trường Đại học Công nghệ - Đại học Quốc gia Hà Nội",
-  highSchool: "THPT Lạc Thuỷ A",
-  lives: "Ha Noi, Vietnam",
-  address: "Chi Nê, Hoà Bình, Vietnam",
-  instagram: "q.thangg_13",
-  github: "dev-qthang",
-  gender: "Male",
-  dateOfBirth: "13/10/2001",
-};
-
 const EditProfile = ({ navigation }) => {
   const dispatch = useDispatch();
-  const [info, setInfo] = useState({
-    avatar: "https://i.redd.it/i3peg3rqksa51.png",
-    wallpaper:
-      "https://i.pinimg.com/736x/f4/f9/1c/f4f91c394261080ff096d7c7843eb4c7.jpg",
-    name: "",
-    bio: "",
-    schools: [],
-    workPlaces: [],
-    lives: "",
-    linked: {
-      instagram: "",
-      github: "",
-      facebook: "",
-      linkedIn: "",
-    },
-    address: "",
-    gender: "",
-    dateOfBirth: "",
-  });
-  const [modalVisible, setModalVisible] = useState({
-    bio: false,
-    information: false,
-    intro: false,
-  });
-
   const userInfo = useSelector((state) => state.user);
+
   const auth = useSelector((state) => state.auth);
+  const [info, setInfo] = useState(userInfo);
+  const [modalVisible, setModalVisible] = useState({
+    information: false,
+  });
 
   const handleData = (field, text) => {
     setInfo({ ...info, [field]: text });
   };
 
-  const handleSave = (fieldModal, field) => {
+  const handleSave = (fieldModal) => {
     setModalVisible(!modalVisible[fieldModal]);
-    dispatch(editAttributeUser({ type: field, data: info[field] }));
+    dispatch(editAttributeUser(info));
   };
 
   const setModal = (fieldModal) => {
@@ -104,10 +72,10 @@ const EditProfile = ({ navigation }) => {
       if (!result.cancelled) {
         if (type === "avatar") {
           setInfo({ ...info, avatar: result.uri });
-          dispatch(editAttributeUser({ type: "avatar", data: result.uri }));
+          // dispatch(editAttributeUser({ type: "avatar", data: result.uri }));
         } else if (type === "wallpaper") {
           setInfo({ ...info, wallpaper: result.uri });
-          dispatch(editAttributeUser({ type: "wallpaper", data: result.uri }));
+          // dispatch(editAttributeUser({ type: "wallpaper", data: result.uri }));
         }
       }
     }
@@ -165,60 +133,6 @@ const EditProfile = ({ navigation }) => {
 
         <View style={styles.editContainer}>
           <View style={styles.typeEditContainer}>
-            <Text style={styles.typeEditText}>Bio</Text>
-            <Text style={styles.editText} onPress={() => setModal("bio")}>
-              Edit
-            </Text>
-          </View>
-          <Text style={styles.textBio}>{userInfo.bio}</Text>
-          <Modal isVisible={modalVisible.bio}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalTypeText}>Edit Bio</Text>
-
-              <TextInput
-                onChangeText={(text) => handleData("bio", text)}
-                style={styles.modalInput}
-                placeholder="Bio..."
-                multiline
-                value={info.bio}
-              />
-              <Text style={styles.noteText}>
-                Try adding a short bio to tell people more about yourself. Your
-                bio is public and limited to 101 characters.
-              </Text>
-
-              <View style={styles.containerButton}>
-                <TouchableOpacity
-                  onPress={() => handleSave("bio", "bio")}
-                  style={{
-                    ...styles.button,
-                    backgroundColor: colors.mainColor,
-                  }}
-                >
-                  <Text style={{ color: colors.white, fontWeight: "500" }}>
-                    Save
-                  </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={{
-                    ...styles.button,
-                    backgroundColor: colors.grayMain,
-                  }}
-                  onPress={() => setModalVisible(!modalVisible.bio)}
-                >
-                  <Text>Cancel</Text>
-                </TouchableOpacity>
-              </View>
-              <Text style={{ ...styles.noteText, textAlign: "center" }}>
-                Your bio is Public.
-              </Text>
-            </View>
-          </Modal>
-        </View>
-
-        <View style={styles.editContainer}>
-          <View style={styles.typeEditContainer}>
             <Text style={styles.typeEditText}>Information</Text>
 
             <Text
@@ -231,18 +145,23 @@ const EditProfile = ({ navigation }) => {
 
           <View style={styles.infoContainer}>
             <View style={styles.infoItem}>
-              <Text style={styles.typeInfo}>Full Name:</Text>
-              <Text style={styles.textInfo}>{userInfo.name}</Text>
+              <Text style={styles.typeInfo}>First Name:</Text>
+              <Text style={styles.textInfo}>{info.firstName}</Text>
+            </View>
+
+            <View style={styles.infoItem}>
+              <Text style={styles.typeInfo}>Last Name:</Text>
+              <Text style={styles.textInfo}>{info.lastName}</Text>
             </View>
 
             <View style={styles.infoItem}>
               <Text style={styles.typeInfo}>Gender:</Text>
-              <Text style={styles.textInfo}>{userInfo.gender}</Text>
+              <Text style={styles.textInfo}>{info.gender}</Text>
             </View>
 
             <View style={styles.infoItem}>
               <Text style={styles.typeInfo}>Date Of Birth:</Text>
-              <Text style={styles.textInfo}>{userInfo.dateOfBirth}</Text>
+              <Text style={styles.textInfo}>{info.dateOfBirth}</Text>
             </View>
           </View>
 
@@ -252,12 +171,22 @@ const EditProfile = ({ navigation }) => {
 
               <View style={styles.infoContainer}>
                 <View style={styles.infoItem}>
-                  <Text style={styles.typeInfo}>Full Name:</Text>
+                  <Text style={styles.typeInfo}>First Name:</Text>
                   <TextInput
-                    onChangeText={(text) => handleData("name", text)}
+                    onChangeText={(text) => handleData("firstName", text)}
                     style={{ ...styles.modalInput, height: 40, width: 180 }}
-                    placeholder="Fullname..."
-                    value={info.name}
+                    placeholder="Input your first name..."
+                    value={info.firstName}
+                  />
+                </View>
+
+                <View style={styles.infoItem}>
+                  <Text style={styles.typeInfo}>Last Name:</Text>
+                  <TextInput
+                    onChangeText={(text) => handleData("lastName", text)}
+                    style={{ ...styles.modalInput, height: 40, width: 180 }}
+                    placeholder="Input your last name..."
+                    value={info.lastName}
                   />
                 </View>
                 <Text style={styles.nodeText}>
@@ -268,7 +197,7 @@ const EditProfile = ({ navigation }) => {
 
               <View style={styles.containerButton}>
                 <TouchableOpacity
-                  onPress={() => handleSave("information", "name")}
+                  onPress={() => handleSave("information")}
                   style={{
                     ...styles.button,
                     backgroundColor: colors.mainColor,
@@ -284,95 +213,13 @@ const EditProfile = ({ navigation }) => {
                     ...styles.button,
                     backgroundColor: colors.grayMain,
                   }}
-                  onPress={() => setModalVisible(!modalVisible.information)}
+                  onPress={() => setModal("intro")}
                 >
                   <Text>Cancel</Text>
                 </TouchableOpacity>
               </View>
             </View>
           </Modal>
-        </View>
-
-        <View style={styles.editContainer}>
-          <View style={styles.typeEditContainer}>
-            <Text style={styles.typeEditText}>Intro</Text>
-            <Text style={styles.editText}>Edit</Text>
-          </View>
-          <View>
-            <View style={styles.aboutContainer}>
-              <View style={styles.aboutItem}>
-                <Ionicons name="school" style={styles.iconAbout} />
-                <Text style={styles.containerText}>
-                  <Text style={styles.normalText}>
-                    Studies {data.branch} at{" "}
-                  </Text>
-                  <Text style={styles.boldText}>{data.school}</Text>
-                </Text>
-              </View>
-
-              <View style={styles.aboutItem}>
-                <Ionicons name="school" style={styles.iconAbout} />
-                <Text style={styles.containerText}>
-                  <Text style={styles.normalText}>Went to </Text>
-                  <Text style={styles.boldText}>{data.highSchool}</Text>
-                </Text>
-              </View>
-
-              <View style={styles.aboutItem}>
-                <Ionicons name="home" style={styles.iconAbout} />
-                <Text style={styles.containerText}>
-                  <Text style={styles.normalText}>Lives in </Text>
-                  <Text style={styles.boldText}>{data.lives}</Text>
-                </Text>
-              </View>
-
-              <View style={styles.aboutItem}>
-                <Entypo name="address" style={styles.iconAbout} />
-                <Text style={styles.containerText}>
-                  <Text style={styles.normalText}>From </Text>
-                  <Text style={styles.boldText}>{data.address}</Text>
-                </Text>
-              </View>
-
-              <View style={styles.aboutItem}>
-                <FontAwesome name="instagram" style={styles.iconAbout} />
-                <Text style={styles.containerText}>
-                  <Text
-                    style={{
-                      ...styles.normalText,
-                      color: colors.secondColor,
-                      textDecorationLine: "underline",
-                    }}
-                    onPress={() =>
-                      Linking.openURL(
-                        `https://www.instagram.com/${data.instagram}`
-                      )
-                    }
-                  >
-                    {data.instagram}
-                  </Text>
-                </Text>
-              </View>
-
-              <View style={styles.aboutItem}>
-                <Ionicons name="logo-github" style={styles.iconAbout} />
-                <Text style={styles.containerText}>
-                  <Text
-                    style={{
-                      ...styles.normalText,
-                      color: colors.secondColor,
-                      textDecorationLine: "underline",
-                    }}
-                    onPress={() =>
-                      Linking.openURL(`https://www.github.com/${data.github}`)
-                    }
-                  >
-                    {data.github}
-                  </Text>
-                </Text>
-              </View>
-            </View>
-          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

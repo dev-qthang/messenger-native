@@ -5,13 +5,21 @@ import { SERVER_URL } from "@env";
 
 const userSlice = createSlice({
   name: "user",
-  initialState: {},
+  initialState: {
+    search: "",
+    story: [],
+    profiles: [],
+    currentUser: {},
+  },
   reducers: {
+    searchUsers(state, action) {
+      state.search = action.payload;
+    },
     getInfo(state, action) {
-      return action.payload;
+      state.currentUser = action.payload;
     },
     editAttributeUser(state, action) {
-      return { ...state, [action.payload.type]: action.payload.data };
+      return action.payload;
     },
 
     removeAttributeUser(state, action) {
@@ -22,7 +30,7 @@ const userSlice = createSlice({
 
 export const getUserInfo = (auth) => async (dispatch) => {
   try {
-    const res = await getDataAPI("user", auth);
+    const res = await getDataAPI(`user`, auth);
 
     dispatch(getInfo(res.data));
   } catch (e) {
@@ -59,6 +67,7 @@ export const upload = (file, type, token) => async (dispatch) => {
 };
 
 const { actions, reducer } = userSlice;
-export const { getInfo, editAttributeUser, removeAttributeUser } = actions;
+export const { searchUsers, getInfo, editAttributeUser, removeAttributeUser } =
+  actions;
 
 export default reducer;

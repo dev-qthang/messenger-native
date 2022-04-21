@@ -1,6 +1,49 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { postDataAPI } from "../utils/fetchData";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+export const register = createAsyncThunk(
+  "auth/register",
+  async (info, { rejectWithValue }) => {
+    try {
+      const res = await postDataAPI("auth/register", info);
+
+      await AsyncStorage.setItem("@user_token", res.data.access_token);
+
+      return res.data;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+);
+
+export const login = createAsyncThunk(
+  "auth/login",
+  async (info, { rejectWithValue }) => {
+    try {
+      const res = await postDataAPI("auth/login", info);
+
+      await AsyncStorage.setItem("@user_token", res.data.access_token);
+
+      return res.data;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+);
+
+export const logout = createAsyncThunk(
+  "auth/logout",
+  async (info, { rejectWithValue }) => {
+    try {
+      const res = await postDataAPI("auth/logout");
+
+      await AsyncStorage.removeItem("@user_token");
+    } catch (err) {
+      console.log(err);
+    }
+  }
+);
 
 const authSlice = createSlice({
   name: "auth",
@@ -8,93 +51,49 @@ const authSlice = createSlice({
     email: "",
     password: "",
     token: "",
-    firstName: "",
-    lastName: "",
-    dateOfBirth: "",
-    gender: "",
   },
   reducers: {
-    loginSuccess(state, action) {
+    isAuthenticated: (state, action) => {
+      const { access_token } = action.payload;
+
+      state.token = access_token;
+    },
+  },
+  extraReducers: {
+    [login.fulfilled]: (state, action) => {
       const { email, password } = action.payload.user;
       const { access_token } = action.payload;
+
       state.token = access_token;
       state.email = email;
       state.password = password;
     },
-    logoutSuccess(state, action) {
+    [login.rejected]: (state, action) => {
+      if (action.payload.error) {
+        state.error = action.payload.error;
+      }
+    },
+    [logout.fulfilled]: (state, action) => {
+      state.token = "";
       state.email = "";
       state.password = "";
-      state.token = "";
     },
-    registerSuccess(state, action) {
-      const { firstName, lastName, dateOfBirth, gender, email, password } =
-        action.payload.user;
+    [register.fulfilled]: (state, action) => {
+      const { email, password } = action.payload.user;
       const { access_token } = action.payload;
+
       state.token = access_token;
       state.email = email;
       state.password = password;
-      state.dateOfBirth = dateOfBirth;
-      state.firstName = firstName;
-      state.lastName = lastName;
-      state.gender = gender;
+    },
+    [register.rejected]: (state, action) => {
+      if (action.payload.error) {
+        state.error = action.payload.error;
+      }
     },
   },
 });
 
-// Action
-export const login = (info) => async (dispatch) => {
-  try {
-    const res = await postDataAPI("auth/login", info);
-
-    if (res.data) {
-      await AsyncStorage.setItem("@user_token", res.data.access_token);
-    }
-
-    dispatch(loginSuccess(res.data));
-  } catch (e) {
-    console.log(e);
-  }
-};
-
-export const logout = () => async (dispatch) => {
-  try {
-    await postDataAPI("auth/logout");
-    dispatch(logoutSuccess());
-
-    await AsyncStorage.removeItem("@user_token");
-  } catch (e) {
-    console.log(e);
-  }
-};
-
-export const register = (info) => async (dispatch) => {
-  try {
-    const res = await postDataAPI("auth/register", info);
-
-    if (res.data) {
-      await AsyncStorage.setItem("@user_token", res.data.access_token);
-    }
-
-    dispatch(registerSuccess(res.data));
-  } catch (e) {
-    console.log(e);
-  }
-};
-
-export const refresh = () => async (dispatch) => {
-  try {
-    const res = await postDataAPI("auth/refresh", info);
-
-    if (res.data) {
-      await AsyncStorage.setItem("@user_token", res.data.access_token);
-    }
-
-    dispatch(registerSuccess(res.data));
-  } catch (e) {
-    console.log(e);
-  }
-};
-
 const { actions, reducer } = authSlice;
-export const { loginSuccess, logoutSuccess, registerSuccess } = actions;
+export const { isAuthenticated } = actions;
 export default reducer;

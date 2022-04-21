@@ -13,6 +13,13 @@ export const styles = StyleSheet.create({
   wallpaperContainer: {
     position: "relative",
   },
+  back: {
+    position: "absolute",
+    left: 10,
+    top: 10,
+    fontSize: 24,
+    zIndex: 999,
+  },
   cameraWallpaper: {
     position: "absolute",
     right: 20,
