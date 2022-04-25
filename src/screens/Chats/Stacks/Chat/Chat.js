@@ -22,7 +22,6 @@ import { colors } from "../../../../theme/colors";
 import { images } from "../../../../images";
 
 import { LeftMessage, RightMessage } from "../Message/Message";
-import { useSelector } from "react-redux";
 import Story from "../../../../components/Story/Story";
 
 import { uploadFile } from "../../../../redux/uploadSlice";
