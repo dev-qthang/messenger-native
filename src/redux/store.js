@@ -4,6 +4,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import userSlice from "./userSlice";
 import themeSlice from "./themeSlice";
 import authSlice from "./authSlice";
+import storySlice from "./storySlice";
 import uploadSlice from "./uploadSlice";
 import messageSlice from "./messageSlice";
 import conversationSlice from "./conversationSlice";
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   user: userSlice,
   theme: themeSlice,
   auth: authSlice,
+  story: storySlice,
   upload: uploadSlice,
   message: messageSlice,
   conversation: conversationSlice,

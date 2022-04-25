@@ -22,14 +22,17 @@ import { colors } from "../../../../theme/colors";
 import { images } from "../../../../images";
 
 import { LeftMessage, RightMessage } from "../Message/Message";
+import Story from "../../../../components/Story/Story";
 
 import { uploadFile } from "../../../../redux/uploadSlice";
 
 const Header = ({ navigation }) => {
   const auth = useSelector((state) => state.auth);
   const user = useSelector((state) => state.user);
+
   return (
     <View style={styles.header}>
+      <Story />
       <TouchableOpacity onPress={() => navigation.navigate("Chats")}>
         <Feather name="chevron-left" style={styles.backIcon} />
       </TouchableOpacity>

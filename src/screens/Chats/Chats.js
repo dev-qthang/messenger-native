@@ -1,33 +1,26 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
 import { View, Text, SafeAreaView } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 import Header from "../../components/Header/Header";
 import SearchBox from "../../components/SearchBox/SearchBox";
+import Story from "../../components/Story/Story";
 import StorySlider from "../../components/StorySlider/StorySlider";
 import { images } from "../../images";
+import { getStories } from "../../redux/storySlice";
+import { getUserInfo } from "../../redux/userSlice";
 import { styles } from "./Chat.styles";
 import UserListing from "./UserListing/UserListing";
 
-import { fetchConversations } from "../../redux/conversationSlice";
-
-const DATA = [
-  { id: 0, image: images.your_story, user: "Your story" },
-  { id: 1, image: images.user_1, user: "Martin" },
-  { id: 2, image: images.user_2, user: "Martin" },
-  { id: 3, image: images.user_3, user: "Karen" },
-  { id: 4, image: images.user_4, user: "Martha" },
-  { id: 5, image: images.user_5, user: "Joshua" },
-];
-
 const Chats = ({ navigation }) => {
+  const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
-  const userInfo = useSelector((state) => state.user);
-  const auth = useSelector((state) => state.auth);
-
   useEffect(() => {
-    dispatch(fetchConversations(userInfo._id, auth.token));
-  });
+    if (auth.token) {
+      dispatch(getUserInfo(auth.token));
+      dispatch(getStories(auth.token));
+    }
+  }, [auth]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -35,9 +28,10 @@ const Chats = ({ navigation }) => {
         heading="Chats"
         icon1={images.take_photo}
         icon2={images.new_message}
+        navigation={navigation}
       />
-      <SearchBox />
-      <StorySlider data={DATA} />
+      <SearchBox navigation={navigation} auth={auth} />
+      <StorySlider navigation={navigation} />
       <UserListing navigation={navigation} />
     </SafeAreaView>
   );

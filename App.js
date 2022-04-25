@@ -5,7 +5,6 @@ import { Provider, useSelector, useDispatch } from "react-redux";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
-
 import store from "./src/redux/store";
 import { images } from "./src/images";
 import Chats from "./src/screens/Chats/Chats";
@@ -19,9 +18,10 @@ import ConversationSettings from "./src/screens/Chats/Stacks/Convesation/Convers
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import LogIn from "./src/screens/Auth/LogIn/LogIn";
 import { useEffect } from "react";
-import { loginSuccess } from "./src/redux/authSlice";
+import { isAuthenticated } from "./src/redux/authSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SignUp from "./src/screens/Auth/SignUp/SignUp";
+import Story from "./src/components/Story/Story";
 import { getUserInfo } from "./src/redux/userSlice";
 
 const Tab = createBottomTabNavigator();
@@ -70,7 +70,6 @@ const Home = () => {
       <Tab.Screen name="Chats" component={Chats} />
       <Tab.Screen name="People" component={People} />
       <Tab.Screen name="Discover" component={Discover} />
-      <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
     // </NavigationContainer>
   );
@@ -87,9 +86,8 @@ const Container = () => {
       const res = await AsyncStorage.getItem("@user_token");
 
       dispatch(
-        loginSuccess({
-          access_token: res || "",
-          user: { email: "", password: "" },
+        isAuthenticated({
+          access_token: res,
         })
       );
     };
@@ -98,10 +96,6 @@ const Container = () => {
       getToken();
     }
   }, []);
-
-  useEffect(() => {
-    dispatch(getUserInfo(auth.token));
-  }, [auth]);
 
   return (
     <NavigationContainer>
@@ -144,6 +138,20 @@ const Container = () => {
         <Stack.Screen
           name="EditProfile"
           component={auth.token && EditProfile}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Story"
+          component={auth.token && Story}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Profile"
+          component={auth.token && Profile}
           options={{
             headerShown: false,
           }}
