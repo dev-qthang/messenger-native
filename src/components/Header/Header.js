@@ -11,7 +11,10 @@ import { logout } from "../../redux/authSlice";
 const Header = ({ heading, icon1, icon2, navigation }) => {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user.currentUser.user);
+
+  const [currentUser, setCurrentUser] = useState({});
+
   // const theme = useSelector((state) => state.theme);
   // const [themeMode, setThemeMode] = useState(false);
   // useEffect(() => {
@@ -29,6 +32,12 @@ const Header = ({ heading, icon1, icon2, navigation }) => {
   //   setThemeMode(!themeMode);
   //   dispatch(editTheme(!theme.isDark));
   // };
+
+  useEffect(() => {
+    if (user) {
+      setCurrentUser(user);
+    }
+  }, [user]);
   const handleLogout = () => {
     dispatch(logout());
   };
@@ -37,7 +46,7 @@ const Header = ({ heading, icon1, icon2, navigation }) => {
     <View style={styles.container}>
       <View style={styles.row}>
         <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-          <Image style={styles.avatar} source={user.avatar} />
+          <Image style={styles.avatar} source={currentUser.avatar} />
         </TouchableOpacity>
         <Text style={styles.title}>{heading}</Text>
       </View>

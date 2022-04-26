@@ -116,42 +116,42 @@ const Container = () => {
         />
         <Stack.Screen
           name="Chat"
-          component={auth.token && Chat}
+          component={Chat}
           options={{
             headerShown: false,
           }}
         />
         <Stack.Screen
           name="ConversationSettings"
-          component={auth.token && ConversationSettings}
+          component={ConversationSettings}
           options={{
             headerShown: false,
           }}
         />
         <Stack.Screen
           name="Camera"
-          component={auth.token && Camera}
+          component={Camera}
           options={{
             headerShown: false,
           }}
         />
         <Stack.Screen
           name="EditProfile"
-          component={auth.token && EditProfile}
+          component={EditProfile}
           options={{
             headerShown: false,
           }}
         />
         <Stack.Screen
           name="Story"
-          component={auth.token && Story}
+          component={Story}
           options={{
             headerShown: false,
           }}
         />
         <Stack.Screen
           name="Profile"
-          component={auth.token && Profile}
+          component={Profile}
           options={{
             headerShown: false,
           }}

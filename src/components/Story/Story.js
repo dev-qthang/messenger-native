@@ -113,16 +113,18 @@ const Story = ({ navigation, route }) => {
       setLoad(false);
     } else {
       // the next content is empty
-      close();
-      console.log(story);
       const nextStory = story.findIndex((e) => e.user === user);
-      const nextUser = story[nextStory + 1];
-      console.log(nextUser);
-      navigation.navigate("Story", {
-        user: nextUser.user,
-        image: nextUser.image,
-        contentStory: nextUser.contentStory,
-      });
+      if (nextStory === -1) {
+        close();
+      } else {
+        const nextUser = story[nextStory + 1];
+        console.log(nextUser);
+        navigation.navigate("Story", {
+          user: nextUser.user,
+          image: nextUser.image,
+          contentStory: nextUser.contentStory,
+        });
+      }
     }
   }
 
@@ -155,7 +157,7 @@ const Story = ({ navigation, route }) => {
     progress.setValue(0);
     setLoad(false);
     setModalVisible(false);
-    navigation.navigate("Home");
+    navigation.goBack();
   }
 
   return (
@@ -278,7 +280,7 @@ const Story = ({ navigation, route }) => {
                     paddingLeft: 10,
                   }}
                 >
-                  {user}
+                  {user.firstName.concat(" ", user.lastName)}
                 </Text>
               </View>
               {/* END OF THE AVATAR AND USERNAME */}

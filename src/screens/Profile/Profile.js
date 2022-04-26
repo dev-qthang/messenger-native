@@ -21,7 +21,7 @@ import Story from "../../components/Story/Story";
 import { getUserInfo } from "../../redux/userSlice";
 
 const Profile = ({ navigation, route }) => {
-  const currentUser = useSelector((state) => state.user.currentUser);
+  const currentUser = useSelector((state) => state.user.currentUser.user);
   const auth = useSelector((state) => state.auth);
   const stories = useSelector((state) => state.story.stories);
   const [user, setUser] = useState({});
