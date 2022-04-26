@@ -43,14 +43,16 @@ const StorySlider = ({ navigation }) => {
       style={styles.userIconContainer}
       onPress={() =>
         navigation.navigate("Story", {
-          user: item.user,
-          image: item.image,
+          user: item,
+          image: item.avatar,
           contentStory: item.contentStory,
         })
       }
     >
       <Image source={item.image} />
-      <Text style={styles.userName}>{item.user}</Text>
+      <Text style={styles.userName}>
+        {item.firstName.concat(" ", item.lastName)}
+      </Text>
     </TouchableOpacity>
   );
 
@@ -61,7 +63,7 @@ const StorySlider = ({ navigation }) => {
         onPress={() =>
           myStory.length > 0
             ? navigation.navigate("Story", {
-                user: user.firstName + user.lastName,
+                user: user,
                 image: user.avatar,
                 contentStory: myStory,
               })
