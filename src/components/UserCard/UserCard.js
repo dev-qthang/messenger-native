@@ -8,12 +8,12 @@ const UserCard = ({ user, navigation, setSearch }) => {
       style={styles.container}
       onPress={() => {
         navigation.navigate("Profile", {
-          userInfo: user,
+          otherUser: user,
         });
         setSearch("");
       }}
     >
-      <Image src={user.avatar} style={styles.userAvatar} />
+      <Image source={user.avatar} style={styles.userAvatar} />
 
       <Text style={styles.userName}>{user.fullName}</Text>
     </TouchableOpacity>

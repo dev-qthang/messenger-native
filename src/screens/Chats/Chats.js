@@ -3,24 +3,23 @@ import { View, Text, SafeAreaView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import Header from "../../components/Header/Header";
 import SearchBox from "../../components/SearchBox/SearchBox";
-import Story from "../../components/Story/Story";
 import StorySlider from "../../components/StorySlider/StorySlider";
 import { images } from "../../images";
-import { getStories } from "../../redux/storySlice";
 import { getUserInfo } from "../../redux/userSlice";
 import { styles } from "./Chat.styles";
 import UserListing from "./UserListing/UserListing";
 
 const Chats = ({ navigation }) => {
   const auth = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
+  const users = useSelector((state) => state.user.users);
+
+  const [loggedUser, setLoggedUser] = useState({});
 
   useEffect(() => {
-    if (auth.token) {
-      dispatch(getUserInfo(auth.token));
-      dispatch(getStories(auth.token));
-    }
-  }, [auth]);
+    const loggedUser = users.filter((user) => user._id === auth?.id)[0];
+
+    setLoggedUser(loggedUser);
+  }, [users]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -29,9 +28,10 @@ const Chats = ({ navigation }) => {
         icon1={images.take_photo}
         icon2={images.new_message}
         navigation={navigation}
+        loggedUser={loggedUser}
       />
-      <SearchBox navigation={navigation} auth={auth} />
-      <StorySlider navigation={navigation} />
+      <SearchBox navigation={navigation} userStore={users} auth={auth} />
+      <StorySlider navigation={navigation} loggedUser={loggedUser} />
       <UserListing navigation={navigation} />
     </SafeAreaView>
   );

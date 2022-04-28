@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Image, FlatList, Text } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,14 +7,19 @@ import { styles } from "./StorySlider.styles";
 import UserPermissions from "../../utils/UserPermissions";
 import * as ImagePicker from "expo-image-picker";
 import { Camera } from "expo-camera";
-import { uploadStory } from "../../redux/storySlice";
+import { getStoriesExist } from "../../redux/storySlice";
 
-const StorySlider = ({ navigation }) => {
+const StorySlider = ({ navigation, loggedUser }) => {
   const dispatch = useDispatch();
-  const stories = useSelector((state) => state.story.stories);
-  const myStory = useSelector((state) => state.story.myStory);
   const [story, setStory] = useState({ content: "", type: "", finish: 0 });
-  const user = useSelector((state) => state.user);
+  const users = useSelector((state) => state.user.users);
+  const storiesExist = useSelector((state) => state.story.storiesExist);
+
+  useEffect(() => {
+    const filterStories = users.filter((user) => user.stories.length > 0);
+
+    dispatch(getStoriesExist(filterStories));
+  }, [users, users.stories]);
 
   const handlePickerAvatar = async () => {
     UserPermissions.getCameraPermission();
@@ -34,7 +39,7 @@ const StorySlider = ({ navigation }) => {
       console.log(result);
 
       if (!result.cancelled) {
-        dispatch(uploadStory({ ...story, content: result.uri, type: "image" }));
+        dispatch(createStory({ ...story, content: result.uri, type: "image" }));
       }
     }
   };
@@ -42,17 +47,15 @@ const StorySlider = ({ navigation }) => {
     <TouchableOpacity
       style={styles.userIconContainer}
       onPress={() =>
+        item?.stories.length > 0 &&
         navigation.navigate("Story", {
-          user: item.user,
-          image: item.user.avatar,
-          contentStory: item.stories,
+          user: item,
+          storiesExist: storiesExist,
         })
       }
     >
-      <Image source={item.image} />
-      <Text style={styles.userName}>
-        {item.user.firstName + " " + item.user.lastName}
-      </Text>
+      <Image source={item.avatar} />
+      <Text style={styles.userName}>{item.fullName}</Text>
     </TouchableOpacity>
   );
 
@@ -61,26 +64,27 @@ const StorySlider = ({ navigation }) => {
       <TouchableOpacity
         style={styles.userIconContainer}
         onPress={() =>
-          myStory.length > 0
+          loggedUser?.stories?.length > 0
             ? navigation.navigate("Story", {
-                user: user,
-                image: user.avatar,
-                contentStory: myStory,
+                user: loggedUser,
+                storiesExist: storiesExist,
               })
             : handlePickerAvatar()
         }
       >
         <Image
-          source={myStory.length > 0 ? images.avatar : images.your_story}
+          source={
+            loggedUser?.stories?.length > 0 ? images.avatar : images.your_story
+          }
         />
         <Text style={styles.userName}>Your Story</Text>
       </TouchableOpacity>
       <FlatList
         showsHorizontalScrollIndicator={false}
         horizontal={true}
-        data={stories}
+        data={storiesExist}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item._id}
       />
     </View>
   );

@@ -22,11 +22,19 @@ import { isAuthenticated } from "./src/redux/authSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SignUp from "./src/screens/Auth/SignUp/SignUp";
 import Story from "./src/components/Story/Story";
-import { getUserInfo } from "./src/redux/userSlice";
+import { getUserInfo, getUsers } from "./src/redux/userSlice";
 
 const Tab = createBottomTabNavigator();
 
 const Home = () => {
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+  useEffect(() => {
+    if (auth.token) {
+      dispatch(getUsers(auth.token));
+    }
+  }, [auth]);
+
   return (
     // <NavigationContainer>
     <Tab.Navigator
@@ -85,9 +93,12 @@ const Container = () => {
     const getToken = async () => {
       const res = await AsyncStorage.getItem("@user_token");
 
+      const id = await AsyncStorage.getItem("@id");
+
       dispatch(
         isAuthenticated({
           access_token: res,
+          id,
         })
       );
     };

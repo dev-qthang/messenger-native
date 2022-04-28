@@ -4,7 +4,6 @@ import {
   Text,
   Image,
   SafeAreaView,
-  Linking,
   TouchableOpacity,
 } from "react-native";
 import { images } from "../../images";
@@ -14,36 +13,27 @@ import Entypo from "react-native-vector-icons/Entypo";
 import Feather from "react-native-vector-icons/Feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { colors } from "../../theme/colors";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollView } from "react-native-gesture-handler";
 import Story from "../../components/Story/Story";
-import { getUserInfo } from "../../redux/userSlice";
 
 const Profile = ({ navigation, route }) => {
-  const currentUser = useSelector((state) => state.user.currentUser.user);
   const auth = useSelector((state) => state.auth);
-  const stories = useSelector((state) => state.story.stories);
   const [user, setUser] = useState({});
-  const [story, setStory] = useState([]);
   const dispatch = useDispatch();
+  const users = useSelector((state) => state.user.users);
 
   useEffect(() => {
-    const userInfo = route.params?.userInfo;
-    if (userInfo) {
-      setUser(userInfo);
-      const currentStory = stories.filter((e) => e.id === userInfo._id)[0]
-        .stories;
-
-      if (currentStory) setStory(currentStory);
+    const otherUser = route.params?.otherUser;
+    if (otherUser) {
+      setUser(otherUser);
     } else {
-      setUser(currentUser);
-      const currentStory = stories.filter((e) => e.id === currentUser._id)[0]
-        .stories;
+      const loggedUser = users.filter((user) => user._id === auth.id)[0];
 
-      if (currentStory) setStory(currentStory);
+      setUser(loggedUser);
     }
-  }, [route.params?.userInfo, currentUser]);
+  }, [route.params?.otherUser, users]);
 
   return (
     <ScrollView style={styles.container}>
@@ -62,11 +52,9 @@ const Profile = ({ navigation, route }) => {
       <TouchableOpacity
         style={styles.dpContainer}
         onPress={() =>
-          story.length > 0 &&
+          user.stories.length > 0 &&
           navigation.navigate("Story", {
             user: user,
-            image: user.avatar,
-            contentStory: story,
           })
         }
       >
@@ -80,7 +68,7 @@ const Profile = ({ navigation, route }) => {
         </View>
       </TouchableOpacity>
 
-      <Text style={styles.name}>{user.firstName + " " + user.lastName}</Text>
+      <Text style={styles.name}>{user.fullName}</Text>
       <Text style={styles.shortBio}>{user.bio}</Text>
 
       <View style={styles.profileTabsContainer}>
@@ -93,7 +81,11 @@ const Profile = ({ navigation, route }) => {
 
         <TouchableOpacity
           style={styles.tabContainer}
-          onPress={() => navigation.navigate("EditProfile")}
+          onPress={() => {
+            if (user._id === auth.id) {
+              navigation.navigate("EditProfile", { user });
+            }
+          }}
         >
           <View style={styles.tabImageContainer}>
             <Icon
@@ -117,6 +109,63 @@ const Profile = ({ navigation, route }) => {
           </View>
           <Text style={styles.tabText}>More</Text>
         </View>
+      </View>
+
+      <View style={styles.infoContainer}>
+        <Text
+          style={{
+            marginLeft: 20,
+            marginBottom: 10,
+            fontWeight: "bold",
+            fontSize: 24,
+          }}
+        >
+          Information
+        </Text>
+        {user.gender && (
+          <View style={styles.itemContainer}>
+            <FontAwesome name="transgender" style={styles.icon} />
+            <Text style={styles.text}>
+              <Text style={styles.valueText}>{user.gender}</Text>
+            </Text>
+          </View>
+        )}
+
+        {user.address && (
+          <View style={styles.itemContainer}>
+            <FontAwesome name="home" style={styles.icon} />
+            <Text style={styles.text}>
+              Lives in <Text style={styles.valueText}>{user.address}</Text>
+            </Text>
+          </View>
+        )}
+
+        {user.school && (
+          <View style={styles.itemContainer}>
+            <Ionicons name="school" style={styles.icon} />
+            <Text style={styles.text}>
+              Studies at <Text style={styles.valueText}>{user.school}</Text>
+            </Text>
+          </View>
+        )}
+
+        {user.work && (
+          <View style={styles.itemContainer}>
+            <MaterialIcons name="work" style={styles.icon} />
+            <Text style={styles.text}>
+              Works at <Text style={styles.valueText}>{user.work}</Text>
+            </Text>
+          </View>
+        )}
+
+        {user.dateOfBirth && (
+          <View style={styles.itemContainer}>
+            <FontAwesome name="birthday-cake" style={styles.icon} />
+            <Text style={styles.text}>
+              Born on <Text style={styles.valueText}>{user.dateOfBirth}</Text>
+            </Text>
+          </View>
+        )}
       </View>
     </ScrollView>
   );

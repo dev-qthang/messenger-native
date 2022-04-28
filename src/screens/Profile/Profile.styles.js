@@ -142,4 +142,25 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
   },
+  infoContainer: {
+    marginTop: 20,
+  },
+  itemContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 5,
+    marginLeft: 20,
+  },
+  icon: {
+    marginRight: 20,
+    fontSize: 22,
+  },
+  text: {
+    fontSize: 16,
+    flexDirection: "row",
+  },
+  valueText: {
+    fontSize: 16,
+    fontWeight: 500,
+  },
 });
