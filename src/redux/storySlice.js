@@ -5,7 +5,7 @@ export const getStories = createAsyncThunk(
   "user/getStories",
   async (auth, { rejectWithValue }) => {
     try {
-      const response = await getDataAPI(`user/suggestions`, auth);
+      const response = await getDataAPI(user/suggestions, auth);
       return response.data;
     } catch (error) {
       console.log(error);
@@ -36,6 +36,7 @@ const storySlice = createSlice({
       const eachStory = action.payload.map((e) => ({
         stories: e.result,
         id: e._id,
+        user: e,
       }));
 
       eachStory.forEach((e) => resultStories.push({ ...e }));

@@ -43,15 +43,15 @@ const StorySlider = ({ navigation }) => {
       style={styles.userIconContainer}
       onPress={() =>
         navigation.navigate("Story", {
-          user: item,
-          image: item.avatar,
-          contentStory: item.contentStory,
+          user: item.user,
+          image: item.user.avatar,
+          contentStory: item.stories,
         })
       }
     >
       <Image source={item.image} />
       <Text style={styles.userName}>
-        {item.firstName.concat(" ", item.lastName)}
+        {item.user.firstName + " " + item.user.lastName}
       </Text>
     </TouchableOpacity>
   );
