@@ -1,10 +1,10 @@
 import axios from "axios";
 import { SERVER_URL } from "@env";
 
+import { url } from "../../env";
 const instance = axios.create({
-  baseURL: "http://192.168.1.167:5000/api/",
+  baseURL: `http://${url}:5000/api/`,
 });
-/////////////////////////////////////
 
 export const getDataAPI = async (url, token) => {
   const res = await instance.get(url, {
