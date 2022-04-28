@@ -1,41 +1,134 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { postDataAPI, getDataAPI } from "../utils/fetchData";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { postDataAPI, getDataAPI, patchDataAPI } from "../utils/fetchData";
 import { SERVER_URL } from "@env";
+
+export const getUsers = createAsyncThunk(
+  "user/getUsers",
+  async (token, { rejectWithValue }) => {
+    try {
+      const response = await getDataAPI(`user`, token);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue({
+        error: "Could not send this request!",
+      });
+    }
+  }
+);
+
+export const createStory = createAsyncThunk(
+  "user/createStory",
+  async ({ userId, story, token }, { rejectWithValue }) => {
+    try {
+      const response = await postDataAPI(`user/story`, story, token);
+      return {
+        newStory: response.data.story,
+        userId,
+      };
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue({
+        error: "Could not send this request!",
+      });
+    }
+  }
+);
+
+export const deleteStory = createAsyncThunk(
+  "user/deleteStory",
+  async ({ userId, storyId, token }, { rejectWithValue }) => {
+    try {
+      const response = await deleteStory(`user/story/${storyId}`, token);
+      return { deleteStoryMsg: response.data, userId, storyId };
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue({
+        error: "Could not send this request!",
+      });
+    }
+  }
+);
 
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    search: "",
-    story: [],
-    profiles: [],
-    currentUser: {},
+    users: [],
   },
-  reducers: {
-    searchUsers(state, action) {
-      state.search = action.payload;
-    },
-    getInfo(state, action) {
-      state.currentUser = action.payload;
-    },
-    editAttributeUser(state, action) {
-      return action.payload;
-    },
+  reducers: {},
+  extraReducers: {
+    // [updateProfile.fulfilled]: (state, action) => {
+    //   state.users.map((e) => {
+    //     if (e._id === action.payload.userId) {
+    //       return action.payload.newProfile;
+    //     } else {
+    //       return e;
+    //     }
+    //   });
+    // },
+    [getUsers.fulfilled]: (state, action) => {
+      const mapStories = action.payload.map((e) => ({
+        ...e,
+        stories: e.stories.map((el) => ({
+          ...el,
+          finish: 0,
+        })),
+      }));
 
-    removeAttributeUser(state, action) {
-      delete state[action.payload];
+      state.users = mapStories;
+    },
+    [createStory.fulfilled]: (state, action) => {
+      state.stories.map((e) => {
+        if (e._id === action.payload.userId) {
+          e.stories = [...e.stories, action.payload.newStory];
+          return e;
+        } else {
+          return e;
+        }
+      });
+    },
+    [deleteStory.fulfilled]: (state, action) => {
+      state.stories.map((e) => {
+        if (e._id === action.payload.userId) {
+          e.stories.filter((story) => story._id !== action.payload.storyId);
+        }
+      });
     },
   },
 });
 
-export const getUserInfo = (auth) => async (dispatch) => {
-  try {
-    const res = await getDataAPI(`user`, auth);
+// export const getProfile = createAsyncThunk(
+//   "user/profile",
+//   async ({ userId, token }, { rejectWithValue }) => {
+//     try {
+//       const response = await getDataAPI(`user/${userId}`, token);
+//       return response.data;
+//     } catch (error) {
+//       console.log(error);
+//       return rejectWithValue({
+//         error: "Could not send this request!",
+//       });
+//     }
+//   }
+// );
 
-    dispatch(getInfo(res.data));
-  } catch (e) {
-    console.log(e);
+export const updateProfile = createAsyncThunk(
+  "user/updateProfile",
+  async ({ userId, profile, token }, { rejectWithValue }) => {
+    try {
+      const response = await patchDataAPI(`user`, profile, token);
+      return {
+        newProfile: response.data.newUser,
+        userId,
+      };
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue({
+        error: "Could not send this request!",
+      });
+    }
   }
-};
+);
 
 export const upload = (uri, type, token) => async (dispatch) => {
   try {
@@ -65,7 +158,6 @@ export const upload = (uri, type, token) => async (dispatch) => {
 };
 
 const { actions, reducer } = userSlice;
-export const { searchUsers, getInfo, editAttributeUser, removeAttributeUser } =
-  actions;
+export const {} = actions;
 
 export default reducer;

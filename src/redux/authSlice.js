@@ -25,6 +25,8 @@ export const login = createAsyncThunk(
 
       await AsyncStorage.setItem("@user_token", res.data.access_token);
 
+      await AsyncStorage.setItem("@id", res.data.user._id);
+
       return res.data;
     } catch (err) {
       console.log(err);
@@ -49,24 +51,25 @@ const authSlice = createSlice({
   name: "auth",
   initialState: {
     email: "",
-    password: "",
+    id: "",
     token: "",
   },
   reducers: {
     isAuthenticated: (state, action) => {
-      const { access_token } = action.payload;
+      const { access_token, id } = action.payload;
 
       state.token = access_token;
+      state.id = id;
     },
   },
   extraReducers: {
     [login.fulfilled]: (state, action) => {
-      const { email, password } = action.payload.user;
+      const { email, id } = action.payload.user;
       const { access_token } = action.payload;
 
       state.token = access_token;
       state.email = email;
-      state.password = password;
+      state.id = id;
     },
     [login.rejected]: (state, action) => {
       if (action.payload.error) {
@@ -76,15 +79,15 @@ const authSlice = createSlice({
     [logout.fulfilled]: (state, action) => {
       state.token = "";
       state.email = "";
-      state.password = "";
+      state.id = "";
     },
     [register.fulfilled]: (state, action) => {
-      const { email, password } = action.payload.user;
+      const { email, id } = action.payload.user;
       const { access_token } = action.payload;
 
       state.token = access_token;
       state.email = email;
-      state.password = password;
+      state.id = id;
     },
     [register.rejected]: (state, action) => {
       if (action.payload.error) {

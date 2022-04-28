@@ -6,38 +6,51 @@ import { getDataAPI } from "../../utils/fetchData";
 import { styles } from "./SearchBox.styles";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import UserCard from "../UserCard/UserCard";
+import { useSelector } from "react-redux";
 
-const SearchBox = ({ auth, navigation }) => {
+const SearchBox = ({ userStore, navigation }) => {
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState([]);
   const debounceSearch = useRef(null);
   const [load, setLoad] = useState(false);
 
   useEffect(() => {
-    if (!search) setUsers([]);
-    if (debounceSearch.current) {
-      clearTimeout(debounceSearch.current);
-    }
+    if (!search) {
+      setUsers([]);
+    } else {
+      if (debounceSearch.current) {
+        clearTimeout(debounceSearch.current);
+      }
+      debounceSearch.current = setTimeout(() => {
+        //   // const searchUsers = async () => {
+        //   //   try {
+        //   //     // setLoad(true);
+        //   //     const users = await getDataAPI(
+        //   //       `user/search?searchUser=${search}`,
+        //   //       auth.token
+        //   //     );
 
-    debounceSearch.current = setTimeout(() => {
-      const searchUsers = async () => {
-        try {
-          // setLoad(true);
-          const users = await getDataAPI(
-            `user/search?searchUser=${search}`,
-            auth.token
-          );
+        //   //     const res = []
+        //   //     usersStore.forEach(u => {
+        //   //       const resultSearch = users.data.find(user => user._id === u._id)
+        //   //     })
 
-          setUsers(users.data);
-          // setLoad(false);
-        } catch (e) {
-          console.log(e);
+        //   //     setUsers(mapUsers);
+        //   //     // setLoad(false);
+        //   //   } catch (e) {
+        //   //     console.log(e);
+        //   //   }
+        //   // };
+        const res = userStore?.filter((user) =>
+          user.fullName.toLowerCase().includes(search)
+        );
+
+        if (res) {
+          setUsers(res);
         }
-      };
-
-      searchUsers();
-    }, 250);
-  }, [search]);
+      }, 250);
+    }
+  }, [search, userStore]);
 
   const handleClose = () => {
     setSearch("");
@@ -56,9 +69,7 @@ const SearchBox = ({ auth, navigation }) => {
           placeholderTextColor={colors.gray02}
           value={search}
           style={styles.searchInput}
-          onChangeText={(text) =>
-            setSearch(text.toLowerCase().replace(/ /g, ""))
-          }
+          onChangeText={(text) => setSearch(text)}
           placeholder="Search"
         />
         {users.length > 0 && <Ionicons name="close" onPress={handleClose} />}

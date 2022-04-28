@@ -20,20 +20,23 @@ import Entypo from "react-native-vector-icons/Entypo";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { editAttributeUser, upload } from "../../../redux/userSlice";
+// import { editAttributeUser, upload } from "../../../redux/userSlice";
 import Modal from "react-native-modal";
 import UserPermissions from "../../../utils/UserPermissions";
 import * as ImagePicker from "expo-image-picker";
 import { Camera } from "expo-camera";
+import { updateProfile } from "../../../redux/userSlice";
 
-const EditProfile = ({ navigation }) => {
+const EditProfile = ({ navigation, route }) => {
+  const { user } = route.params;
   const dispatch = useDispatch();
-  const userInfo = useSelector((state) => state.user);
 
   const auth = useSelector((state) => state.auth);
-  const [info, setInfo] = useState(userInfo);
+  const [infoTemp, setInfoTemp] = useState(user);
+  const [info, setInfo] = useState(user);
   const [modalVisible, setModalVisible] = useState({
     information: false,
+    bio: false,
   });
 
   const handleData = (field, text) => {
@@ -42,7 +45,6 @@ const EditProfile = ({ navigation }) => {
 
   const handleSave = (fieldModal) => {
     setModalVisible(!modalVisible[fieldModal]);
-    dispatch(editAttributeUser(info));
   };
 
   const setModal = (fieldModal) => {
@@ -92,9 +94,17 @@ const EditProfile = ({ navigation }) => {
           />
           <Text style={styles.headerText}>Edit Profile</Text>
           <TouchableOpacity
-            onPress={() => dispatch(upload(info.avatar, "image", auth.token))}
+            onPress={() =>
+              dispatch(
+                updateProfile({
+                  userId: auth.id,
+                  profile: info,
+                  token: auth.token,
+                })
+              )
+            }
           >
-            <Text>Submit</Text>
+            <Text>Save</Text>
           </TouchableOpacity>
         </View>
 
@@ -133,6 +143,71 @@ const EditProfile = ({ navigation }) => {
 
         <View style={styles.editContainer}>
           <View style={styles.typeEditContainer}>
+            <Text style={styles.typeEditText}>Bio</Text>
+
+            <Text style={styles.editText} onPress={() => setModal("bio")}>
+              Edit
+            </Text>
+          </View>
+
+          <View style={styles.infoContainer}>
+            <View style={styles.infoItem}>
+              <Text style={styles.textInfo}>{info.bio}</Text>
+            </View>
+          </View>
+
+          <Modal isVisible={modalVisible.bio}>
+            <View style={{ ...styles.modalView, maxHeight: 250 }}>
+              <Text style={styles.modalTypeText}>Edit Bio</Text>
+
+              <View style={styles.infoContainer}>
+                <View style={styles.infoItem}>
+                  <TextInput
+                    onChangeText={(text) => handleData("bio", text)}
+                    style={{ ...styles.modalInput, height: 40, width: 180 }}
+                    placeholder="Input your bio..."
+                    multiline
+                    value={info.bio}
+                  />
+                </View>
+              </View>
+
+              <View style={styles.containerButton}>
+                <TouchableOpacity
+                  onPress={() => handleSave("bio")}
+                  style={{
+                    ...styles.button,
+                    backgroundColor: colors.mainColor,
+                  }}
+                >
+                  <Text style={{ color: colors.white, fontWeight: "500" }}>
+                    Save
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={{
+                    ...styles.button,
+                    backgroundColor: colors.grayMain,
+                  }}
+                >
+                  <Text
+                    onPress={() => {
+                      setModalVisible({ information: false });
+
+                      setInfo(infoTemp);
+                    }}
+                  >
+                    Cancel
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        </View>
+
+        <View style={styles.editContainer}>
+          <View style={styles.typeEditContainer}>
             <Text style={styles.typeEditText}>Information</Text>
 
             <Text
@@ -152,6 +227,21 @@ const EditProfile = ({ navigation }) => {
             <View style={styles.infoItem}>
               <Text style={styles.typeInfo}>Last Name:</Text>
               <Text style={styles.textInfo}>{info.lastName}</Text>
+            </View>
+
+            <View style={styles.infoItem}>
+              <Text style={styles.typeInfo}>Address:</Text>
+              <Text style={styles.textInfo}>{info.address}</Text>
+            </View>
+
+            <View style={styles.infoItem}>
+              <Text style={styles.typeInfo}>School:</Text>
+              <Text style={styles.textInfo}>{info.school}</Text>
+            </View>
+
+            <View style={styles.infoItem}>
+              <Text style={styles.typeInfo}>Work:</Text>
+              <Text style={styles.textInfo}>{info.work}</Text>
             </View>
 
             <View style={styles.infoItem}>
@@ -189,6 +279,36 @@ const EditProfile = ({ navigation }) => {
                     value={info.lastName}
                   />
                 </View>
+
+                <View style={styles.infoItem}>
+                  <Text style={styles.typeInfo}>Address:</Text>
+                  <TextInput
+                    onChangeText={(text) => handleData("address", text)}
+                    style={{ ...styles.modalInput, height: 40, width: 180 }}
+                    placeholder="Input your address..."
+                    value={info.address}
+                  />
+                </View>
+
+                <View style={styles.infoItem}>
+                  <Text style={styles.typeInfo}>School:</Text>
+                  <TextInput
+                    onChangeText={(text) => handleData("school", text)}
+                    style={{ ...styles.modalInput, height: 40, width: 180 }}
+                    placeholder="Input your school..."
+                    value={info.school}
+                  />
+                </View>
+
+                <View style={styles.infoItem}>
+                  <Text style={styles.typeInfo}>Workplace:</Text>
+                  <TextInput
+                    onChangeText={(text) => handleData("work", text)}
+                    style={{ ...styles.modalInput, height: 40, width: 180 }}
+                    placeholder="Input your workplace..."
+                    value={info.work}
+                  />
+                </View>
                 <Text style={styles.nodeText}>
                   Your gender and date of birth cannot be changed for security
                   reasons
@@ -213,9 +333,15 @@ const EditProfile = ({ navigation }) => {
                     ...styles.button,
                     backgroundColor: colors.grayMain,
                   }}
-                  onPress={() => setModal("intro")}
                 >
-                  <Text>Cancel</Text>
+                  <Text
+                    onPress={() => {
+                      setModalVisible({ information: false });
+                      setInfo(infoTemp);
+                    }}
+                  >
+                    Cancel
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>
