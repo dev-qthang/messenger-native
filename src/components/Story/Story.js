@@ -20,15 +20,16 @@ import * as VideoThumbnails from "expo-video-thumbnails";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { removeStoriesExist } from "../../redux/storySlice";
 const { width, height } = Dimensions.get("window");
 const screenRatio = height / width;
 
 const Story = ({ navigation, route }) => {
   // THE CONTENT
-  const { user, image, contentStory } = route.params;
-  const story = useSelector((state) => state.story.stories);
-  const [content, setContent] = useState(contentStory);
-  console.log(content);
+  const { user, storiesExist } = route.params;
+  const [content, setContent] = useState(user.stories);
+  const dispatch = useDispatch();
   // i use modal for opening the instagram stories
   const [modalVisible, setModalVisible] = useState(true);
   // for get the duration
@@ -39,6 +40,10 @@ const Story = ({ navigation, route }) => {
   const [load, setLoad] = useState(false);
   // progress is the animation value of the bars content playing the current state
   const progress = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (user) setContent(user.stories);
+  }, [user]);
 
   //  I WAS THINKING TO GET THE VIDEO THUMBNAIL BEFORE THE VIDEO LOADS UP
 
@@ -71,12 +76,13 @@ const Story = ({ navigation, route }) => {
   // start() is for starting the animation bars at the top
   function start(n) {
     // checking if the content type is video or not
-    if (content[current].type === "video") {
+    if (content[current]?.type === "video") {
       // type video
       if (load) {
         Animated.timing(progress, {
           toValue: 1,
           duration: n,
+          useNativeDriver: true,
         }).start(({ finished }) => {
           if (finished) {
             next();
@@ -88,6 +94,7 @@ const Story = ({ navigation, route }) => {
       Animated.timing(progress, {
         toValue: 1,
         duration: 5000,
+        useNativeDriver: true,
       }).start(({ finished }) => {
         if (finished) {
           next();
@@ -104,26 +111,37 @@ const Story = ({ navigation, route }) => {
   // next() is for changing the content of the current content to +1
   function next() {
     // check if the next content is not empty
-    if (current !== content.length - 1) {
-      let story = [...content];
-      story[current].finish = 1;
-      setContent(story);
-      setCurrent(current + 1);
-      progress.setValue(0);
-      setLoad(false);
+
+    if (current === content.length - 1 && !storiesExist) {
+      close();
     } else {
-      // the next content is empty
-      const nextStory = story.findIndex((e) => e.user === user);
-      if (nextStory === -1) {
-        close();
+      if (current !== content.length - 1) {
+        let story = [...content];
+        console.log(story);
+        story[current] = { ...story[current], finish: 1 };
+        setContent(story);
+        setCurrent(current + 1);
+        progress.setValue(0);
+        setLoad(false);
       } else {
-        const nextUser = story[nextStory + 1];
-        console.log(nextUser);
-        navigation.navigate("Story", {
-          user: nextUser.user,
-          image: nextUser.image,
-          contentStory: nextUser.contentStory,
-        });
+        // the next content is empty
+        const nextStory = storiesExist.findIndex((e) => e === user);
+        if (nextStory === -1 || nextStory === storiesExist.length - 1) {
+          close();
+
+          if (nextStory !== -1) {
+            dispatch(removeStoriesExist(storiesExist[nextStory]));
+          }
+        } else {
+          setCurrent(0);
+          progress.setValue(0);
+          const nextUser = storiesExist[nextStory + 1];
+          dispatch(removeStoriesExist(storiesExist[nextStory]));
+          navigation.navigate("Story", {
+            user: nextUser,
+            storiesExist,
+          });
+        }
       }
     }
   }
@@ -131,24 +149,35 @@ const Story = ({ navigation, route }) => {
   // previous() is for changing the content of the current content to -1
   function previous() {
     // checking if the previous content is not empty
-    if (current - 1 >= 0) {
-      let story = [...content];
-      story[current].finish = 0;
-      setContent(story);
-      setCurrent(current - 1);
-      progress.setValue(0);
-      setLoad(false);
-    } else {
-      // the previous content is empty
+    if (current - 1 < 0 && !storiesExist) {
+      // for 1 person
       close();
-      const previousStory = story.findIndex((e) => e.user === user);
-      const previousUser = story[previousStory - 1];
-      console.log(previousUser);
-      navigation.navigate("Story", {
-        user: previousUser.user,
-        image: previousUser.image,
-        contentStory: previousUser.contentStory,
-      });
+    } else {
+      if (current - 1 >= 0) {
+        let story = [...content];
+
+        story[current] = { ...story[current], finish: 0 };
+        setContent(story);
+        setCurrent(current - 1);
+        progress.setValue(0);
+        setLoad(false);
+      } else {
+        // the previous content is empty
+        const previousStory = storiesExist.findIndex((e) => e === user);
+        console.log(previousStory);
+        if (previousStory === -1 || previousStory === 0) {
+          close();
+        } else {
+          setCurrent(0);
+          progress.setValue(0);
+          const previousUser = storiesExist[previousStory - 1];
+          console.log(previousUser);
+          navigation.navigate("Story", {
+            user: previousUser,
+            storiesExist,
+          });
+        }
+      }
     }
   }
 
@@ -168,10 +197,10 @@ const Story = ({ navigation, route }) => {
         <View style={styles.containerModal}>
           <View style={styles.backgroundContainer}>
             {/* check the content type is video or an image */}
-            {content[current].type === "video" ? (
+            {content[current]?.type === "video" ? (
               <Video
                 source={{
-                  uri: content[current].content,
+                  uri: content[current]?.content,
                 }}
                 rate={1.0}
                 volume={1.0}
@@ -187,7 +216,7 @@ const Story = ({ navigation, route }) => {
                 // 	height: height,
                 // }}
                 // usePoster
-                onReadyForDisplay={play()}
+                // onReadyForDisplay={play()}
                 onPlaybackStatusUpdate={(AVPlaybackStatus) => {
                   setLoad(AVPlaybackStatus.isLoaded);
                   setEnd(AVPlaybackStatus.durationMillis);
@@ -201,7 +230,7 @@ const Story = ({ navigation, route }) => {
                   play();
                 }}
                 source={{
-                  uri: content[current].content,
+                  uri: content[current]?.content,
                 }}
                 style={{ width: width, height: height, resizeMode: "cover" }}
               />
@@ -231,30 +260,32 @@ const Story = ({ navigation, route }) => {
                 paddingHorizontal: 10,
               }}
             >
-              {content.map((index, key) => {
-                return (
-                  // THE BACKGROUND
-                  <View
-                    key={key}
-                    style={{
-                      height: 2,
-                      flex: 1,
-                      flexDirection: "row",
-                      backgroundColor: "rgba(117, 117, 117, 0.5)",
-                      marginHorizontal: 2,
-                    }}
-                  >
-                    {/* THE ANIMATION OF THE BAR*/}
-                    <Animated.View
+              {content &&
+                content.map((index, key) => {
+                  return (
+                    // THE BACKGROUND
+                    <View
+                      key={key}
                       style={{
-                        flex: current === key ? progress : content[key].finish,
                         height: 2,
-                        backgroundColor: "rgba(255, 255, 255, 1)",
+                        flex: 1,
+                        flexDirection: "row",
+                        backgroundColor: "rgba(117, 117, 117, 0.5)",
+                        marginHorizontal: 2,
                       }}
-                    ></Animated.View>
-                  </View>
-                );
-              })}
+                    >
+                      {/* THE ANIMATION OF THE BAR*/}
+                      <Animated.View
+                        style={{
+                          flex:
+                            current === key ? progress : content[key].finish,
+                          height: 2,
+                          backgroundColor: "rgba(255, 255, 255, 1)",
+                        }}
+                      ></Animated.View>
+                    </View>
+                  );
+                })}
             </View>
             {/* END OF ANIMATION BARS */}
 
@@ -262,7 +293,6 @@ const Story = ({ navigation, route }) => {
               style={{
                 height: 50,
                 flexDirection: "row",
-
                 justifyContent: "space-between",
                 paddingHorizontal: 15,
               }}
@@ -271,7 +301,7 @@ const Story = ({ navigation, route }) => {
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Image
                   style={{ height: 30, width: 30, borderRadius: 25 }}
-                  source={image}
+                  source={user?.avatar}
                 />
                 <Text
                   style={{
@@ -280,7 +310,7 @@ const Story = ({ navigation, route }) => {
                     paddingLeft: 10,
                   }}
                 >
-                  {user.firstName.concat(" ", user.lastName)}
+                  {user?.fullName}
                 </Text>
               </View>
               {/* END OF THE AVATAR AND USERNAME */}
@@ -294,7 +324,6 @@ const Story = ({ navigation, route }) => {
                   style={{
                     alignItems: "center",
                     justifyContent: "center",
-
                     height: 50,
                     paddingHorizontal: 15,
                   }}

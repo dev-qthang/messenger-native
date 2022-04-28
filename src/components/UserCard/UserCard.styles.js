@@ -7,15 +7,19 @@ export const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 15,
     flex: 1,
-    height: 50,
+    flexDirection: "row",
+    alignItems: "center",
   },
   userName: {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: "400",
     color: colors.gray02,
+    marginLeft: 5,
   },
   userAvatar: {
     alignItems: "center",
     justifyContent: "center",
+    width: 40,
+    height: 40,
   },
 });

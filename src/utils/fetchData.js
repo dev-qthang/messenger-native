@@ -1,10 +1,8 @@
 import axios from "axios";
 import { SERVER_URL } from "@env";
 
-// Cái đống này là chạy ở máy tôi nhé :v các ông pull về mà thấy thì cứ cmt vào
-import { url } from "../../env";
 const instance = axios.create({
-  baseURL: "http://192.168.1.142:5000/api/",
+  baseURL: "http://192.168.1.167:5000/api/",
 });
 /////////////////////////////////////
 
