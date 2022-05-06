@@ -82,7 +82,6 @@ const Story = ({ navigation, route }) => {
         Animated.timing(progress, {
           toValue: 1,
           duration: n,
-          useNativeDriver: true,
         }).start(({ finished }) => {
           if (finished) {
             next();
@@ -94,7 +93,6 @@ const Story = ({ navigation, route }) => {
       Animated.timing(progress, {
         toValue: 1,
         duration: 5000,
-        useNativeDriver: true,
       }).start(({ finished }) => {
         if (finished) {
           next();
@@ -216,7 +214,7 @@ const Story = ({ navigation, route }) => {
                 // 	height: height,
                 // }}
                 // usePoster
-                // onReadyForDisplay={play()}
+                onReadyForDisplay={play()}
                 onPlaybackStatusUpdate={(AVPlaybackStatus) => {
                   setLoad(AVPlaybackStatus.isLoaded);
                   setEnd(AVPlaybackStatus.durationMillis);

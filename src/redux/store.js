@@ -8,6 +8,7 @@ import storySlice from "./storySlice";
 import uploadSlice from "./uploadSlice";
 import messageSlice from "./messageSlice";
 import conversationSlice from "./conversationSlice";
+import socketSlice from "./socketSlice";
 
 const composedEnhancers = composeWithDevTools();
 
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   upload: uploadSlice,
   message: messageSlice,
   conversation: conversationSlice,
+  socket: socketSlice,
 });
 
 const store = configureStore({

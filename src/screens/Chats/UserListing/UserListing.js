@@ -8,24 +8,16 @@ import { styles } from "./UserListing.styles";
 import { images } from "../../../images";
 
 const UserListing = ({ navigation }) => {
-  // let Data = [
-  //   {
-  //     id: 1,
-  //     name: "Martin Randolph",
-  //     image: images.user_1,
-  //     lastMessage: "You: What’s man! · 9:40 AM ",
-  //   },
-  // ];
-
-  let Data = useSelector((state) => state.conversation.conversations);
-  Data = Data.map((c) => {
-    return {
-      id: c._id,
-      name: c.title,
+  let Data = [
+    {
+      id: 1,
+      name: "Martin Randolph",
       image: images.user_1,
-      lastMessage: "Test ",
-    };
-  });
+      lastMessage: "You: What's man! · 9:40 AM ",
+    },
+  ];
+
+  // let Data = useSelector((state) => state.conversation.conversations);
 
   const renderHiddenItem = (data, rowMap) => (
     <View style={styles.rowBack}>

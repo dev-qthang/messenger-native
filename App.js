@@ -23,6 +23,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import SignUp from "./src/screens/Auth/SignUp/SignUp";
 import Story from "./src/components/Story/Story";
 import { getUserInfo, getUsers } from "./src/redux/userSlice";
+import io from "socket.io-client";
+import { getSocket } from "./src/redux/socketSlice";
 
 const Tab = createBottomTabNavigator();
 
@@ -106,6 +108,11 @@ const Container = () => {
     if (!auth.token) {
       getToken();
     }
+  }, []);
+
+  useEffect(() => {
+    const socket = io("http://localhost:5000");
+    dispatch(getSocket(socket));
   }, []);
 
   return (
