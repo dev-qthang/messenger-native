@@ -4,7 +4,6 @@ import { styles } from "./Message.styles";
 import { images } from "../../../../images";
 
 export const LeftMessage = ({ imgSource, arrMessages }) => {
-
   return (
     <View style={styles.left_container}>
       <View style={styles.avatar}>
@@ -20,8 +19,8 @@ export const LeftMessage = ({ imgSource, arrMessages }) => {
   )
 };
 
-export const RightMessage = ({ imgSource, arrMessages }) => {
 
+export const RightMessage = ({ imgSource, arrMessages }) => {
   return (
     <View style={styles.right_container}>
       <View style={styles.text}>

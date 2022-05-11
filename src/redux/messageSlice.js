@@ -1,29 +1,59 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { postDataAPI, getDataAPI } from "../utils/fetchData";
-import { SERVER_URL } from "@env";
 
 const messageSlice = createSlice({
   name: "upload",
   initialState: {
-    messages: [],
+    currentMessages: [],
   },
   reducers: {
-    getMessages(state) {
-      return state.messages;
+    getCurrentMessages(state) {
+      return state.currentMessages;
     },
-    setMessages(state, action) {
-      state.messages = action.payload;
+    setCurrentMessages(state, action) {
+      state.currentMessages = action.payload;
     },
   },
 });
 
-export const fetchMessages = (idConversation, token) => async (dispatch) => {
+// Temporarily get all message in conversation
+export const fetchCurrentMessages = (conversationId, token) => async (dispatch) => {
   try {
-    let messages = await getDataAPI(
-      `${SERVER_URL}message/${idConversation}`,
+    const res = await getDataAPI(
+      `message/whole/conversation/${conversationId}`,
       token
     );
-    dispatch(setMessages(messages));
+
+    if (res.status === 200) {
+      dispatch(setCurrentMessages(res.data));
+    } else {
+      console.log(res);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const fetchSendMessage = (conversationId, senderId, msgType, content, token) => async (dispatch) => {
+  try {
+    const res = await postDataAPI(
+      `message/`,
+      {
+        conversationId,
+        senderId,
+        msgType,
+        content,
+      },
+      token
+    );
+
+    if (res.status === 201) {
+      console.log(res.data);
+      return res.data;
+    } else {
+      console.log(res);
+    }
+
   } catch (err) {
     console.log(err);
   }
@@ -31,6 +61,6 @@ export const fetchMessages = (idConversation, token) => async (dispatch) => {
 
 const { actions, reducer } = messageSlice;
 
-export const { getMessages, setMessages } = actions;
+export const { getCurrentMessages, setCurrentMessages } = actions;
 
 export default reducer;

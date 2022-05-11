@@ -17,12 +17,15 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollView } from "react-native-gesture-handler";
 import Story from "../../components/Story/Story";
+import { fetchConversation1vs1 } from "../../redux/conversationSlice";
+import { fetchCurrentMessages } from "../../redux/messageSlice";
 
 const Profile = ({ navigation, route }) => {
   const auth = useSelector((state) => state.auth);
   const [user, setUser] = useState({});
   const dispatch = useDispatch();
   const users = useSelector((state) => state.user.users);
+  const current_conversation = useSelector((state) => state.conversation.current_conversation);
 
   useEffect(() => {
     const otherUser = route.params?.otherUser;
@@ -49,6 +52,7 @@ const Profile = ({ navigation, route }) => {
         />
         <Image source={images.take_photo} style={styles.cameraWallpaper} />
       </View>
+
       <TouchableOpacity
         style={styles.dpContainer}
         onPress={() =>
@@ -72,6 +76,8 @@ const Profile = ({ navigation, route }) => {
       <Text style={styles.shortBio}>{user.bio}</Text>
 
       <View style={styles.profileTabsContainer}>
+
+        {/* Add Story button */}
         <View style={styles.tabContainer}>
           <View style={styles.tabImageContainer}>
             <Icon name="plus" style={styles.tabImage} />
@@ -79,6 +85,7 @@ const Profile = ({ navigation, route }) => {
           <Text style={styles.tabText}>Add Story</Text>
         </View>
 
+        {/* Edit Profile button */}
         <TouchableOpacity
           style={styles.tabContainer}
           onPress={() => {
@@ -96,13 +103,23 @@ const Profile = ({ navigation, route }) => {
           <Text style={styles.tabText}>Edit Profile</Text>
         </TouchableOpacity>
 
-        <View style={styles.tabContainer}>
-          <View style={styles.tabImageContainer}>
-            <Entypo name="message" style={styles.tabImage} />
+        {/* Message button */}
+        <TouchableOpacity
+          style={styles.tabContainer}
+          onPress={() => {
+            dispatch(fetchConversation1vs1(auth.id, user._id, auth.token));
+            navigation.navigate("Chat");
+          }}
+        >
+          <View style={styles.tabContainer}>
+            <View style={styles.tabImageContainer}>
+              <Entypo name="message" style={styles.tabImage} />
+            </View>
+            <Text style={styles.tabText}>Message</Text>
           </View>
-          <Text style={styles.tabText}>Message</Text>
-        </View>
+        </TouchableOpacity>
 
+        {/* More Options button */}
         <View style={styles.tabContainer}>
           <View style={styles.tabImageContainer}>
             <Feather name="more-horizontal" style={styles.tabImage} />

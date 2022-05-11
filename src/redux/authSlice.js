@@ -26,7 +26,7 @@ export const login = createAsyncThunk(
       await AsyncStorage.setItem("@user_token", res.data.access_token);
 
       await AsyncStorage.setItem("@id", res.data.user._id);
-
+      
       return res.data;
     } catch (err) {
       console.log(err);
@@ -49,11 +49,13 @@ export const logout = createAsyncThunk(
 
 const authSlice = createSlice({
   name: "auth",
+
   initialState: {
     email: "",
     id: "",
     token: "",
   },
+
   reducers: {
     isAuthenticated: (state, action) => {
       const { access_token, id } = action.payload;
@@ -62,14 +64,15 @@ const authSlice = createSlice({
       state.id = id;
     },
   },
+  
   extraReducers: {
     [login.fulfilled]: (state, action) => {
-      const { email, id } = action.payload.user;
+      const { email, _id } = action.payload.user;
       const { access_token } = action.payload;
 
       state.token = access_token;
       state.email = email;
-      state.id = id;
+      state.id = _id;
     },
     [login.rejected]: (state, action) => {
       if (action.payload.error) {

@@ -31,6 +31,7 @@ const Tab = createBottomTabNavigator();
 const Home = () => {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
+
   useEffect(() => {
     if (auth.token) {
       dispatch(getUsers(auth.token));
