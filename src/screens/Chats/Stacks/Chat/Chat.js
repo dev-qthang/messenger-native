@@ -25,6 +25,7 @@ import { LeftMessage, RightMessage } from "../Message/Message";
 import Story from "../../../../components/Story/Story";
 
 import { uploadFile } from "../../../../redux/uploadSlice";
+import { fetchCurrentMessages, fetchSendMessage } from "../../../../redux/messageSlice";
 
 const Chat = ({ navigation }) => {
   const [messageList, setMessageList] = useState([]);
@@ -35,6 +36,9 @@ const Chat = ({ navigation }) => {
 
   const auth = useSelector((state) => state.auth);
   const user = useSelector((state) => state.user);
+  const current_conversation = useSelector((state) => state.conversation.current_conversation);
+  const currentMessages = useSelector((state) => state.message.currentMessages.messages);
+
   const { socket } = useSelector((state) => state.socket);
   const { token } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -42,7 +46,7 @@ const Chat = ({ navigation }) => {
   const sendMessage = () => {
     if (text !== "") {
       const messageData = {
-        author: "Thang",
+        author: auth.firstName,
         message: text,
         time:
           new Date(Date.now()).getHours() +
@@ -54,6 +58,16 @@ const Chat = ({ navigation }) => {
       setMessageList([...messageList, messageData]);
       setText("");
     }
+
+    // if (text !== "") {
+    //   console.log(text);
+    //   dispatch(fetchSendMessage(current_conversation._id, auth.id, 0, text, auth.token));
+    //   dispatch(fetchCurrentMessages(current_conversation._id, auth.token));
+
+    //   socket.emit("send_message", currentMessages[0]);
+    //   setMessageList([...messageList, currentMessages[0]]);
+    //   setText("");
+    // }
   };
 
   useEffect(() => {
@@ -90,29 +104,45 @@ const Chat = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.header}>
         {/* <Story /> */}
-        <TouchableOpacity onPress={() => navigation.navigate("Chats")}>
+
+        {/* Back to Chats list button */}
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Chats");
+          }}
+        >
           <Feather name="chevron-left" style={styles.backIcon} />
         </TouchableOpacity>
 
+        {/* Header of Conversation */}
         <View style={styles.headerInfo}>
           <TouchableOpacity
             activeOpacity={0.6}
             style={{ flexDirection: "row" }}
-            onPress={() =>
+            onPress={() => {
               navigation.navigate("ConversationSettings", {
-                avatar: images.avatar,
-                userInfo: { username: auth.firstName, status: "Active" },
-              })
-            }
+                avatar: current_conversation.avatar,
+                userInfo: {
+                  username: current_conversation.title,
+                  status: "Active"
+                },
+              });
+            }}
           >
-            <Image source={user.avatar} style={styles.header_avatarIcon} />
+            <Image
+              source={current_conversation.avatar}
+              style={styles.header_avatarIcon}
+            />
             <View>
-              <Text style={{ fontSize: 16, fontWeight: "bold" }}>Username</Text>
+              <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                {current_conversation.title}
+              </Text>
               <Text style={{ fontSize: 12 }}>Status</Text>
             </View>
           </TouchableOpacity>
         </View>
 
+        {/* Some action buttons (call, call video) */}
         <View style={styles.header_actions}>
           <TouchableOpacity
             onPress={() => {
@@ -131,9 +161,9 @@ const Chat = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </View>
-      {
-        // style={[styles.message, username === messageContent.author ? "you" : "other"]}
-      }
+
+      { /* style={[styles.message, username === messageContent.author ? "you" : "other"]} */}
+      {/* Body a.k.a List of messages */}
       <View style={styles.body}>
         <ScrollView>
           {messageList.map((messageContent, index) => {
@@ -151,10 +181,30 @@ const Chat = ({ navigation }) => {
               </View>
             );
           })}
+
+          {/* {currentMessages.messages.foreach((msg, index) => {
+            console.log(msg);
+
+            return (
+              <View key={index}>
+                <View>
+                  <View style={styles.msg}>
+                    <Text>{msg.content}</Text>
+                  </View>
+                  <View style={styles.messageMeta}>
+                    <Text style={styles.time}>{msg.createdAt}</Text>
+                    <Text style={styles.author}>{msg.author}</Text>
+                  </View>
+                </View>
+              </View>
+            );
+          })} */}
         </ScrollView>
       </View>
 
       <View style={styles.footer}>
+
+        {/* Grid a.k.a four points */}
         <TouchableOpacity>
           <Entypo
             name="grid"
@@ -162,6 +212,7 @@ const Chat = ({ navigation }) => {
           />
         </TouchableOpacity>
 
+        {/* Camera button */}
         <TouchableOpacity
           onPress={() =>
             navigation.navigate("Camera", {
@@ -174,14 +225,17 @@ const Chat = ({ navigation }) => {
           <FontAwesome name="camera" style={styles.icon} />
         </TouchableOpacity>
 
+        {/* Picture/Photo button */}
         <TouchableOpacity onPress={pickImage}>
           <FontAwesome name="photo" style={styles.icon} />
         </TouchableOpacity>
 
+        {/* Microphone button */}
         <TouchableOpacity>
           <FontAwesome name="microphone" style={styles.icon} />
         </TouchableOpacity>
 
+        {/* Message Text input */}
         <View style={styles.input}>
           <TextInput
             style={styles.inputText}
@@ -195,14 +249,17 @@ const Chat = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
+        {/* a.k.a Like button */}
         <TouchableOpacity>
           <AntDesign name="like1" style={styles.icon} />
         </TouchableOpacity>
 
+        {/* a.k.a Send button */}
         <TouchableOpacity onPress={sendMessage}>
           <Ionicons name="send" style={styles.icon} />
         </TouchableOpacity>
 
+        {/* ... */}
         {image && (
           <View style={styles.preview}>
             <TouchableOpacity
@@ -227,6 +284,8 @@ const Chat = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         )}
+
+        {/* ... */}
         {videoUri && (
           <View style={styles.preview}>
             <TouchableOpacity
@@ -257,6 +316,7 @@ const Chat = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         )}
+
       </View>
     </View>
   );

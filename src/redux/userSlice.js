@@ -52,10 +52,13 @@ export const deleteStory = createAsyncThunk(
 
 const userSlice = createSlice({
   name: "user",
+
   initialState: {
     users: [],
   },
+  
   reducers: {},
+  
   extraReducers: {
     // [updateProfile.fulfilled]: (state, action) => {
     //   state.users.map((e) => {

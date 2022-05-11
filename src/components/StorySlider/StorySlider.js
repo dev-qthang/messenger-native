@@ -9,16 +9,27 @@ import * as ImagePicker from "expo-image-picker";
 import { Camera } from "expo-camera";
 import { getStoriesExist } from "../../redux/storySlice";
 
+// For getting list of conversations of the user
+import { fetchConversations } from "../../redux/conversationSlice";
+
+
 const StorySlider = ({ navigation, loggedUser }) => {
   const dispatch = useDispatch();
   const [story, setStory] = useState({ content: "", type: "", finish: 0 });
   const users = useSelector((state) => state.user.users);
   const storiesExist = useSelector((state) => state.story.storiesExist);
 
+  // For getting list of conversations of the user
+  const auth = useSelector((state) => state.auth);
+
   useEffect(() => {
     const filterStories = users.filter((user) => user.stories.length > 0);
 
     dispatch(getStoriesExist(filterStories));
+
+    // Login successfully => Load conversations of the user
+    dispatch(fetchConversations(auth.id, auth.token));
+
   }, [users, users.stories]);
 
   const handlePickerAvatar = async () => {
@@ -66,9 +77,9 @@ const StorySlider = ({ navigation, loggedUser }) => {
         onPress={() =>
           loggedUser?.stories?.length > 0
             ? navigation.navigate("Story", {
-                user: loggedUser,
-                storiesExist: storiesExist,
-              })
+              user: loggedUser,
+              storiesExist: storiesExist,
+            })
             : handlePickerAvatar()
         }
       >
