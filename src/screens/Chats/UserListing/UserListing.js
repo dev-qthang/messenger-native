@@ -7,6 +7,7 @@ import { SwipeListView } from "react-native-swipe-list-view";
 import { styles } from "./UserListing.styles";
 import { images } from "../../../images";
 import { setCurrentConversation } from "../../../redux/conversationSlice";
+import { fetchCurrentMessages } from "../../../redux/messageSlice";
 
 const UserListing = ({ navigation }) => {
   // let Data = [
@@ -48,13 +49,16 @@ const UserListing = ({ navigation }) => {
   );
 
   const renderItem = ({ item }) => {
+
+    const onSelectConversation = () => {
+      dispatch(setCurrentConversation(item));
+      dispatch(fetchCurrentMessages(item._id, auth.token))
+      navigation.navigate("Chat");
+    }
     return (
       <TouchableOpacity
         activeOpacity={1}
-        onPress={() => {
-          dispatch(setCurrentConversation(item));
-          navigation.navigate("Chat");
-        }}
+        onPress={onSelectConversation}
       >
         <View style={styles.userItemContainer}>
           <Image source={item.avatar} style={styles.userIcon} />

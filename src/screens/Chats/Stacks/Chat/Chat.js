@@ -166,39 +166,21 @@ const Chat = ({ navigation }) => {
       {/* Body a.k.a List of messages */}
       <View style={styles.body}>
         <ScrollView>
-          {messageList.map((messageContent, index) => {
+          {currentMessages && currentMessages.map((messageContent, index) => {
             return (
               <View key={index}>
                 <View>
                   <View style={styles.messageContent}>
-                    <Text>{messageContent.message}</Text>
+                    <Text>{messageContent.content}</Text>
                   </View>
                   <View style={styles.messageMeta}>
-                    <Text style={styles.time}>{messageContent.time}</Text>
+                    <Text style={styles.time}>{messageContent.createdAt}</Text>
                     <Text style={styles.author}>{messageContent.author}</Text>
                   </View>
                 </View>
               </View>
             );
           })}
-
-          {/* {currentMessages.messages.foreach((msg, index) => {
-            console.log(msg);
-
-            return (
-              <View key={index}>
-                <View>
-                  <View style={styles.msg}>
-                    <Text>{msg.content}</Text>
-                  </View>
-                  <View style={styles.messageMeta}>
-                    <Text style={styles.time}>{msg.createdAt}</Text>
-                    <Text style={styles.author}>{msg.author}</Text>
-                  </View>
-                </View>
-              </View>
-            );
-          })} */}
         </ScrollView>
       </View>
 
