@@ -23,6 +23,7 @@ const Chats = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+
       <Header
         heading="Chats"
         icon1={images.take_photo}
@@ -30,8 +31,11 @@ const Chats = ({ navigation }) => {
         navigation={navigation}
         loggedUser={loggedUser}
       />
+
       <SearchBox navigation={navigation} userStore={users} auth={auth} />
+
       <StorySlider navigation={navigation} loggedUser={loggedUser} />
+      
       <UserListing navigation={navigation} />
     </SafeAreaView>
   );

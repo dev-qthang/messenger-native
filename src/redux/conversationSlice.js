@@ -1,14 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { postDataAPI, getDataAPI } from "../utils/fetchData";
-import { SERVER_URL } from "@env";
 
-const messageSlice = createSlice({
-  name: "upload",
+const conversationSlice = createSlice({
+  name: 'conversation',
+
   initialState: {
     conversations: [],
     current_conversation: {},
     members: [],
   },
+
   reducers: {
     getConversations(state) {
       return state.conversations;
@@ -33,31 +34,111 @@ const messageSlice = createSlice({
   },
 });
 
-export const fetchConversations = (idUser, token) => async (dispatch) => {
+// TODO: not perfect in API (Server) => review someday
+export const fetchConversations = (userId, token) => async (dispatch) => {
   try {
-    let conversations = await getDataAPI(
-      `${SERVER_URL}conversation/${idUser}`,
+    const res = await getDataAPI(
+      `conversation/user/${userId}`,
       token
     );
-    dispatch(setConversations(conversations));
+
+    if (res.status === 200) {
+      // Change title of Conversations whose title = '1vs1' into peerName
+      for (const conversation of res.data.conversations) {
+        if (conversation.title === '1vs1') {
+          let peerId = userId === conversation.members[0] ? conversation.members[1] : conversation.members[0];
+          const peerRes = await getDataAPI(
+            `user/${peerId}`,
+            token
+          );
+
+          if (peerRes.status === 200) {
+            conversation.title = peerRes.data.fullName;
+            conversation.avatar = peerRes.data.avatar;
+          } else {
+            console.log(peerRes);
+          }
+        }
+      }
+
+      dispatch(setConversations(res.data.conversations));
+    } else {
+      console.log(res);
+    }
+
   } catch (err) {
     console.log(err);
   }
 };
 
+export const fetchConversationById = (conversationId, token) => async (dispatch) => {
+  try {
+    const res = await getDataAPI(
+      `conversation/id/${conversationId}`,
+      token
+    );
+
+    if (res.status === 200) {
+      dispatch(setCurrentConversation(res.data));
+    } else {
+      console.log(res);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+// TODO: not perfect => review someday
 export const fetchMembers = (idConversation, token) => async (dispatch) => {
   try {
-    let members = await getDataAPI(
-      `${SERVER_URL}conversation/members/${idConversation}`,
+    const res = await getDataAPI(
+      `conversation/members/${idConversation}`,
       token
     );
-    dispatch(setMembers(members));
+
+    if (res.status === 200) {
+      dispatch(setMembers(res.data));
+    } else {
+      console.log(res);
+    }
+
   } catch (err) {
     console.log(err);
   }
 };
 
-const { actions, reducer } = messageSlice;
+export const fetchConversation1vs1 = (peerA, peerB, token) => async (dispatch) => {
+  try {
+    const res = await getDataAPI(
+      `conversation/peers?peerA=${peerA}&peerB=${peerB}`,
+      token
+    );
+
+    if (res.status === 200) {
+
+      const peerRes = await getDataAPI(
+        `user/${peerB}`,
+        token
+      );
+
+      if (peerRes.status === 200) {
+        res.data.title = peerRes.data.fullName;
+        res.data.avatar = peerRes.data.avatar;
+      } else {
+        console.log(peerRes);
+      }
+
+      dispatch(setCurrentConversation(res.data));
+    } else {
+      console.log(res);
+    }
+
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const { actions, reducer } = conversationSlice;
 
 export const {
   getConversations,
