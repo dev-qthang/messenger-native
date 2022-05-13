@@ -41,7 +41,11 @@ const UserListing = ({ navigation }) => {
     return (
       <TouchableOpacity
         activeOpacity={1}
-        onPress={() => navigation.navigate("Chat")}
+        onPress={() =>
+          navigation.navigate("Chat", {
+            user: item,
+          })
+        }
       >
         <View style={styles.userItemContainer}>
           <Image source={item.image} style={styles.userIcon} />

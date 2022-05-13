@@ -135,10 +135,10 @@ const Chat = ({ navigation }) => {
         // style={[styles.message, username === messageContent.author ? "you" : "other"]}
       }
       <View style={styles.body}>
-        <ScrollView>
+        <ScrollView style={styles.messageContainer}>
           {messageList.map((messageContent, index) => {
             return (
-              <View key={index}>
+              <View key={index} style={[styles.message, username]}>
                 <View>
                   <View style={styles.messageContent}>
                     <Text>{messageContent.message}</Text>
