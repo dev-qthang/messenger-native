@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Button,
   TextInput,
+  Alert,
 } from "react-native";
 import { CheckBox } from "react-native-elements";
 import { images } from "../../../images";
@@ -25,7 +26,8 @@ import Modal from "react-native-modal";
 import UserPermissions from "../../../utils/UserPermissions";
 import * as ImagePicker from "expo-image-picker";
 import { Camera } from "expo-camera";
-import { updateProfile } from "../../../redux/userSlice";
+import { getUsers, updateProfile } from "../../../redux/userSlice";
+import { uploadFile } from "../../../redux/uploadSlice";
 
 const EditProfile = ({ navigation, route }) => {
   const { user } = route.params;
@@ -83,6 +85,25 @@ const EditProfile = ({ navigation, route }) => {
     }
   };
 
+  const onUpdatePress = async () => {
+    const newInfo = { ...info };
+    if (info.avatar !== user.avatar) {
+      newInfo.avatar = await uploadFile(info.avatar, "image", auth.token);
+    }
+
+    if (info.wallpaper !== user.wallpaper) {
+      newInfo.wallpaper = await uploadFile(info.wallpaper, "image", auth.token);
+    }
+
+    dispatch(
+      updateProfile({
+        userId: auth.id,
+        profile: newInfo,
+        token: auth.token,
+      })
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -93,17 +114,7 @@ const EditProfile = ({ navigation, route }) => {
             onPress={() => navigation.navigate("Profile")}
           />
           <Text style={styles.headerText}>Edit Profile</Text>
-          <TouchableOpacity
-            onPress={() =>
-              dispatch(
-                updateProfile({
-                  userId: auth.id,
-                  profile: info,
-                  token: auth.token,
-                })
-              )
-            }
-          >
+          <TouchableOpacity onPress={onUpdatePress}>
             <Text>Save</Text>
           </TouchableOpacity>
         </View>

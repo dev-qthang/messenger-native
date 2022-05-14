@@ -140,50 +140,6 @@ const Profile = ({ navigation, route }) => {
         >
           Information
         </Text>
-        {user.gender && (
-          <View style={styles.itemContainer}>
-            <FontAwesome name="transgender" style={styles.icon} />
-            <Text style={styles.text}>
-              <Text style={styles.valueText}>{user.gender}</Text>
-            </Text>
-          </View>
-        )}
-
-        {user.address && (
-          <View style={styles.itemContainer}>
-            <FontAwesome name="home" style={styles.icon} />
-            <Text style={styles.text}>
-              Lives in <Text style={styles.valueText}>{user.address}</Text>
-            </Text>
-          </View>
-        )}
-
-        {user.school && (
-          <View style={styles.itemContainer}>
-            <Ionicons name="school" style={styles.icon} />
-            <Text style={styles.text}>
-              Studies at <Text style={styles.valueText}>{user.school}</Text>
-            </Text>
-          </View>
-        )}
-
-        {user.work && (
-          <View style={styles.itemContainer}>
-            <MaterialIcons name="work" style={styles.icon} />
-            <Text style={styles.text}>
-              Works at <Text style={styles.valueText}>{user.work}</Text>
-            </Text>
-          </View>
-        )}
-
-        {user.dateOfBirth && (
-          <View style={styles.itemContainer}>
-            <FontAwesome name="birthday-cake" style={styles.icon} />
-            <Text style={styles.text}>
-              Born on <Text style={styles.valueText}>{user.dateOfBirth}</Text>
-            </Text>
-          </View>
-        )}
       </View>
     </ScrollView>
   );

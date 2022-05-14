@@ -56,9 +56,9 @@ const userSlice = createSlice({
   initialState: {
     users: [],
   },
-  
+
   reducers: {},
-  
+
   extraReducers: {
     // [updateProfile.fulfilled]: (state, action) => {
     //   state.users.map((e) => {
@@ -133,32 +133,32 @@ export const updateProfile = createAsyncThunk(
   }
 );
 
-export const upload = (uri, type, token) => async (dispatch) => {
-  try {
-    const formData = new FormData();
+// export const upload = (uri, type, token) => async (dispatch) => {
+//   try {
+//     const formData = new FormData();
 
-    formData.append("image", {
-      uri: uri,
-      type: "image/jpg",
-      name: "new_file",
-    });
-    const response = await fetch(`${SERVER_URL}upload/${type.toLowerCase()}`, {
-      method: "post",
-      body: formData,
-      headers: {
-        "Content-Type": "multipart/form-data",
-        Accept: "application/json",
-        Authorization: token,
-      },
-    });
+//     formData.append("image", {
+//       uri: uri,
+//       type: "image/jpg",
+//       name: "new_file",
+//     });
+//     const response = await fetch(`${SERVER_URL}upload/${type.toLowerCase()}`, {
+//       method: "post",
+//       body: formData,
+//       headers: {
+//         "Content-Type": "multipart/form-data",
+//         Accept: "application/json",
+//         Authorization: token,
+//       },
+//     });
 
-    let resJson = await response.json();
-    console.log("Url: ", resJson.url);
-    return resJson.url;
-  } catch (err) {
-    console.log(err);
-  }
-};
+//     let resJson = await response.json();
+//     console.log("Url: ", resJson.url);
+//     return resJson.url;
+//   } catch (err) {
+//     console.log(err);
+//   }
+// };
 
 const { actions, reducer } = userSlice;
 export const {} = actions;
