@@ -26,7 +26,7 @@ export const login = createAsyncThunk(
       await AsyncStorage.setItem("@user_token", res.data.access_token);
 
       await AsyncStorage.setItem("@id", res.data.user._id);
-      
+
       return res.data;
     } catch (err) {
       console.log(err);
@@ -64,7 +64,7 @@ const authSlice = createSlice({
       state.id = id;
     },
   },
-  
+
   extraReducers: {
     [login.fulfilled]: (state, action) => {
       const { email, _id } = action.payload.user;

@@ -1,4 +1,8 @@
-import { configureStore, applyMiddleware } from "@reduxjs/toolkit";
+import {
+  configureStore,
+  applyMiddleware,
+  getDefaultMiddleware,
+} from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import userSlice from "./userSlice";
@@ -26,6 +30,10 @@ const rootReducer = combineReducers({
 const store = configureStore({
   reducer: rootReducer,
   composedEnhancers,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 export default store;

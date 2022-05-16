@@ -25,7 +25,10 @@ import { LeftMessage, RightMessage } from "../Message/Message";
 import Story from "../../../../components/Story/Story";
 
 import { uploadFile } from "../../../../redux/uploadSlice";
-import { fetchCurrentMessages, fetchSendMessage } from "../../../../redux/messageSlice";
+import {
+  fetchCurrentMessages,
+  fetchSendMessage,
+} from "../../../../redux/messageSlice";
 
 const Chat = ({ navigation }) => {
   const [messageList, setMessageList] = useState([]);
@@ -36,8 +39,12 @@ const Chat = ({ navigation }) => {
 
   const auth = useSelector((state) => state.auth);
   const user = useSelector((state) => state.user);
-  const current_conversation = useSelector((state) => state.conversation.current_conversation);
-  const currentMessages = useSelector((state) => state.message.currentMessages.messages);
+  const current_conversation = useSelector(
+    (state) => state.conversation.current_conversation
+  );
+  // const currentMessages = useSelector(
+  //   (state) => state.message.currentMessages.messages
+  // );
 
   const { socket } = useSelector((state) => state.socket);
   const { token } = useSelector((state) => state.auth);
@@ -46,7 +53,10 @@ const Chat = ({ navigation }) => {
   const sendMessage = () => {
     if (text !== "") {
       const messageData = {
-        author: auth.firstName,
+        room: current_conversation._id,
+        userName: current_conversation.title,
+        idUser: auth.id,
+        avatar: current_conversation.avatar,
         message: text,
         time:
           new Date(Date.now()).getHours() +
@@ -70,9 +80,19 @@ const Chat = ({ navigation }) => {
     // }
   };
 
+  // useEffect(() => {
+  //   socket.on("receive_message", (data) => {
+  //     setMessageList([...messageList, data]);
+  //   });
+  // }, [socket, messageList]);
+
   useEffect(() => {
     socket.on("receive_message", (data) => {
-      setMessageList([...messageList, data]);
+      if (Array.isArray(data)) {
+        setMessageList([...messageList, ...data]);
+      } else {
+        setMessageList([...messageList, data]);
+      }
     });
   }, [socket, messageList]);
 
@@ -124,7 +144,7 @@ const Chat = ({ navigation }) => {
                 avatar: current_conversation.avatar,
                 userInfo: {
                   username: current_conversation.title,
-                  status: "Active"
+                  status: "Active",
                 },
               });
             }}
@@ -162,30 +182,51 @@ const Chat = ({ navigation }) => {
         </View>
       </View>
 
-      { /* style={[styles.message, username === messageContent.author ? "you" : "other"]} */}
+      {/* style={[styles.message, username === messageContent.userName ? "you" : "other"]} */}
       {/* Body a.k.a List of messages */}
       <View style={styles.body}>
-        <ScrollView>
-          {currentMessages && currentMessages.map((messageContent, index) => {
+        <ScrollView style={styles.messageContainer}>
+          {messageList.map((messageContent, index) =>
+            messageContent.idUser === auth.id ? (
+              <RightMessage
+                key={index}
+                message={messageContent.message}
+                time={messageContent.time}
+                userName={messageContent.userName}
+                avatar={messageContent.avatar}
+              />
+            ) : (
+              <LeftMessage
+                key={index}
+                message={messageContent.message}
+                time={messageContent.time}
+                userName={messageContent.userName}
+                avatar={messageContent.avatar}
+              />
+            )
+          )}
+
+          {/* {currentMessages.messages.foreach((msg, index) => {
+            console.log(msg);
+
             return (
               <View key={index}>
                 <View>
-                  <View style={styles.messageContent}>
-                    <Text>{messageContent.content}</Text>
+                  <View style={styles.msg}>
+                    <Text>{msg.content}</Text>
                   </View>
                   <View style={styles.messageMeta}>
-                    <Text style={styles.time}>{messageContent.createdAt}</Text>
-                    <Text style={styles.author}>{messageContent.author}</Text>
+                    <Text style={styles.time}>{msg.createdAt}</Text>
+                    <Text style={styles.userName}>{msg.userName}</Text>
                   </View>
                 </View>
               </View>
             );
-          })}
+          })} */}
         </ScrollView>
       </View>
 
       <View style={styles.footer}>
-
         {/* Grid a.k.a four points */}
         <TouchableOpacity>
           <Entypo
@@ -298,7 +339,6 @@ const Chat = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         )}
-
       </View>
     </View>
   );

@@ -24,16 +24,16 @@ const uploadSlice = createSlice({
   },
 });
 
-export const uploadFile = (uri, type, token) => async (dispatch) => {
+export const uploadFile = async (uri, type, token) => {
   try {
     const formData = new FormData();
-
-    formData.append("image", {
+    formData.append(type, {
       uri: uri,
-      type: type == "image" ? "image/jpg" : "video/mp4",
+      type: type === "image" ? "image/jpg" : "video/mp4",
       name: "new_file",
     });
-    const response = await fetch(`${SERVER_URL}upload/${type.toLowerCase()}`, {
+
+    const response = await fetch(`${SERVER_URL}/upload/${type.toLowerCase()}`, {
       method: "post",
       body: formData,
       headers: {
@@ -44,18 +44,7 @@ export const uploadFile = (uri, type, token) => async (dispatch) => {
     });
 
     let resJson = await response.json();
-
-    console.log(resJson);
-
-    const newFileUrl = resJson.url;
-
-    //  TODO: lưu ảnh/video vừa upload vào database
-
-    if (type == "image") {
-      dispatch(setImageUrl(newFileUrl));
-    } else {
-      dispatch(setVideoUrl(newFileUrl));
-    }
+    return resJson.url;
   } catch (err) {
     console.log(err);
   }
