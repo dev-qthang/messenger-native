@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -38,7 +38,7 @@ const Chat = ({ navigation }) => {
   const video = useRef(null);
 
   const auth = useSelector((state) => state.auth);
-  const user = useSelector((state) => state.user);
+  const users = useSelector((state) => state.user.users);
   const current_conversation = useSelector(
     (state) => state.conversation.current_conversation
   );
@@ -46,19 +46,25 @@ const Chat = ({ navigation }) => {
   //   (state) => state.message.currentMessages.messages
   // );
 
-  console.log("Message list: ", messageList);
+  // console.log("Message list: ", messageList);
 
   const { socket } = useSelector((state) => state.socket);
   const { token } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
+  const sendUser = useMemo(() => {
+    const user = users.find(user => user._id === auth.id)
+
+    return user
+  }, [users, auth])
+
   const sendMessage = () => {
     if (text !== "") {
       const messageData = {
         room: current_conversation._id,
-        userName: current_conversation.title,
+        userName: sendUser.firstName,
         idUser: auth.id,
-        avatar: current_conversation.avatar,
+        avatar: sendUser.avatar,
         type: 0,
         message: text,
         time:
@@ -90,13 +96,18 @@ const Chat = ({ navigation }) => {
   // }, [socket, messageList]);
 
   useEffect(() => {
-    socket.on("receive_message", (data) => {
+    const handler =  (data) => {
       if (Array.isArray(data)) {
         setMessageList([...messageList, ...data]);
       } else {
         setMessageList([...messageList, data]);
       }
-    });
+    }
+    socket.on("receive_message", handler);
+
+    return () => {
+      socket.off('receive_message', handler)
+    }
   }, [socket, messageList]);
 
   const pickImage = async () => {
@@ -115,6 +126,9 @@ const Chat = ({ navigation }) => {
 
   const onSendImage = async () => {
     const imageUrl = await uploadFile(image, "image", token);
+
+    // console.log("Image uri: ", image);
+    // console.log(imageUrl);
 
     const messageData = {
       room: current_conversation._id,
