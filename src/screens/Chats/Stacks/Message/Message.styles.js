@@ -20,6 +20,7 @@ export const styles = StyleSheet.create({
   },
   text: {
     flex: 1,
+    backgroundColor: colors.mainColor,
   },
   textValue: {
     color: colors.white,
@@ -29,13 +30,34 @@ export const styles = StyleSheet.create({
     marginBottom: 1,
   },
 
+  image: {
+    flex: 1,
+    maxWidth: "70%",
+    maxHeight: 400,
+  },
+
+  imageMessage: {
+    width: 200,
+    height: 200,
+  },
+
+  video: {
+    flex: 1,
+    maxWidth: "70%",
+    maxHeight: 400,
+  },
+  videoMessage: {
+    width: 200,
+    height: 200,
+  },
+
   right_container: {
     maxWidth: "69%",
     flexDirection: "row",
     marginLeft: "auto",
     marginVertical: 2,
     borderRadius: 16,
-    backgroundColor: colors.mainColor,
+    // backgroundColor: colors.mainColor,
   },
   checkedIcon: {
     width: 16,
