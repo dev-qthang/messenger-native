@@ -112,7 +112,8 @@ const Container = () => {
   }, []);
 
   useEffect(() => {
-    const socket = io("http://localhost:5000");
+    const socket = io("http://192.168.43.107:5000", {      
+      transports: ['websocket'], jsonp: false });
     dispatch(getSocket(socket));
   }, []);
 

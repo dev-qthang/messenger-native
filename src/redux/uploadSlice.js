@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { postDataAPI, getDataAPI } from "../utils/fetchData";
-import { SERVER_URL } from "@env";
+import { SERVER_URL } from "../utils/ip";
 
 const uploadSlice = createSlice({
   name: "upload",
@@ -42,6 +42,8 @@ export const uploadFile = async (uri, type, token) => {
         Authorization: token,
       },
     });
+
+    console.log(response);
 
     let resJson = await response.json();
     return resJson.url;

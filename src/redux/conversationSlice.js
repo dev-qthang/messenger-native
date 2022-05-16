@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { postDataAPI, getDataAPI } from "../utils/fetchData";
+import { fetchCurrentMessages } from "./messageSlice";
 
 const conversationSlice = createSlice({
   name: 'conversation',
@@ -34,7 +35,6 @@ const conversationSlice = createSlice({
   },
 });
 
-// TODO: not perfect in API (Server) => review someday
 export const fetchConversations = (userId, token) => async (dispatch) => {
   try {
     const res = await getDataAPI(
@@ -88,11 +88,10 @@ export const fetchConversationById = (conversationId, token) => async (dispatch)
   }
 }
 
-// TODO: not perfect => review someday
-export const fetchMembers = (idConversation, token) => async (dispatch) => {
+export const fetchMembers = (conversationId, token) => async (dispatch) => {
   try {
     const res = await getDataAPI(
-      `conversation/members/${idConversation}`,
+      `conversation/members/${conversationId}`,
       token
     );
 
@@ -129,6 +128,8 @@ export const fetchConversation1vs1 = (peerA, peerB, token) => async (dispatch) =
       }
 
       dispatch(setCurrentConversation(res.data));
+      dispatch(fetchCurrentMessages(res.data._id, token));
+      
     } else {
       console.log(res);
     }
@@ -137,6 +138,22 @@ export const fetchConversation1vs1 = (peerA, peerB, token) => async (dispatch) =
     console.log(err);
   }
 };
+
+export const fetchCreateConversation = (title, members, token) => async (dispatch) => {
+  try {
+    const res = await postDataAPI('/', { title, members, }, token);
+
+    if (res.status === 201) {
+      console.log(res.data);
+      return res.data;
+    } else {
+      console.log(res);
+    }
+
+  } catch (err) {
+    console.log(err);
+  }
+}
 
 const { actions, reducer } = conversationSlice;
 

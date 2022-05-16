@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { postDataAPI, getDataAPI, patchDataAPI } from "../utils/fetchData";
-import { SERVER_URL } from "@env";
 
 export const getUsers = createAsyncThunk(
   "user/getUsers",

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { postDataAPI, getDataAPI } from "../utils/fetchData";
-import { SERVER_URL } from "@env";
+import { SERVER_URL } from "../utils/ip";
 
 const socketSlice = createSlice({
   name: "socket",
