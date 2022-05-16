@@ -46,6 +46,8 @@ const Chat = ({ navigation }) => {
   //   (state) => state.message.currentMessages.messages
   // );
 
+  console.log("Message list: ", messageList);
+
   const { socket } = useSelector((state) => state.socket);
   const { token } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -57,6 +59,7 @@ const Chat = ({ navigation }) => {
         userName: current_conversation.title,
         idUser: auth.id,
         avatar: current_conversation.avatar,
+        type: 0,
         message: text,
         time:
           new Date(Date.now()).getHours() +
@@ -110,13 +113,47 @@ const Chat = ({ navigation }) => {
     }
   };
 
-  const onSendImage = () => {
-    dispatch(uploadFile(image, "image", token));
+  const onSendImage = async () => {
+    const imageUrl = await uploadFile(image, "image", token);
+
+    const messageData = {
+      room: current_conversation._id,
+      userName: current_conversation.title,
+      idUser: auth.id,
+      avatar: current_conversation.avatar,
+      type: 1,
+      message: imageUrl,
+      time:
+        new Date(Date.now()).getHours() +
+        ":" +
+        new Date(Date.now()).getMinutes(),
+    };
+
+    socket.emit("send_message", messageData);
+    setMessageList([...messageList, messageData]);
+
     setImage(null);
   };
 
-  const onSendVideo = () => {
-    dispatch(uploadFile(videoUri, "video", token));
+  const onSendVideo = async () => {
+    const videoUrl = await uploadFile(videoUri, "video", token);
+
+    const messageData = {
+      room: current_conversation._id,
+      userName: current_conversation.title,
+      idUser: auth.id,
+      avatar: current_conversation.avatar,
+      type: 2,
+      message: videoUrl,
+      time:
+        new Date(Date.now()).getHours() +
+        ":" +
+        new Date(Date.now()).getMinutes(),
+    };
+
+    socket.emit("send_message", messageData);
+    setMessageList([...messageList, messageData]);
+
     setVideoUri(null);
   };
 
@@ -190,6 +227,7 @@ const Chat = ({ navigation }) => {
             messageContent.idUser === auth.id ? (
               <RightMessage
                 key={index}
+                type={messageContent.type}
                 message={messageContent.message}
                 time={messageContent.time}
                 userName={messageContent.userName}
@@ -198,6 +236,7 @@ const Chat = ({ navigation }) => {
             ) : (
               <LeftMessage
                 key={index}
+                type={messageContent.type}
                 message={messageContent.message}
                 time={messageContent.time}
                 userName={messageContent.userName}
