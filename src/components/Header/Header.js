@@ -43,9 +43,9 @@ const Header = ({ heading, icon1, icon2, navigation, loggedUser }) => {
       </View>
       <View style={styles.row}>
         <TouchableOpacity onPress={handleLogout}>
-          <MaterialIcons name="logout" style={{ fontSize: 26 }} />
+          <MaterialIcons name="logout" style={{ fontSize: 26, marginRight: 12, }} />
         </TouchableOpacity>
-        <Image style={styles.icon} source={icon1} />
+        <Image style={styles.iconCam} source={icon1} />
         <Image style={styles.icon} source={icon2} />
       </View>
     </View>

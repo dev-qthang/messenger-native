@@ -3,7 +3,7 @@ import { colors } from "../../theme/colors";
 
 export const styles = StyleSheet.create({
   container: {
-    marginTop: 24,
+    marginTop: 4,
     display: "flex",
     backgroundColor: colors.white,
     justifyContent: "space-between",
@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    fontSize: 30,
+    fontSize: 25,
     fontWeight: "700",
   },
   icon: {
@@ -22,6 +22,14 @@ export const styles = StyleSheet.create({
     height: 40,
     marginHorizontal: 5,
     marginVertical: 15,
+    marginRight: 15,
+  },
+  iconCam: {
+    width: 40,
+    height: 40,
+    marginHorizontal: 5,
+    marginVertical: 15,
+    marginRight: 10,
   },
   avatar: {
     width: 40,

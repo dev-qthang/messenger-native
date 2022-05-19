@@ -29,6 +29,7 @@ import {
   fetchCurrentMessages,
   fetchSendMessage,
 } from "../../../../redux/messageSlice";
+import { enumMessenger } from "../../../../utils/enum";
 
 const Chat = ({ navigation }) => {
   const [messageList, setMessageList] = useState([]);
@@ -65,7 +66,7 @@ const Chat = ({ navigation }) => {
         userName: sendUser.firstName,
         idUser: auth.id,
         avatar: sendUser.avatar,
-        type: 0,
+        type: enumMessenger.msgType.text,
         message: text,
         time:
           new Date(Date.now()).getHours() +
@@ -135,7 +136,7 @@ const Chat = ({ navigation }) => {
       userName: current_conversation.title,
       idUser: auth.id,
       avatar: current_conversation.avatar,
-      type: 1,
+      type: enumMessenger.msgType.image,
       message: imageUrl,
       time:
         new Date(Date.now()).getHours() +
@@ -157,7 +158,7 @@ const Chat = ({ navigation }) => {
       userName: current_conversation.title,
       idUser: auth.id,
       avatar: current_conversation.avatar,
-      type: 2,
+      type: enumMessenger.msgType.file,
       message: videoUrl,
       time:
         new Date(Date.now()).getHours() +
@@ -220,7 +221,7 @@ const Chat = ({ navigation }) => {
               console.log("Call pressed");
             }}
           >
-            <FontAwesome name="phone" style={styles.icon} />
+            <FontAwesome name="phone" style={styles.iconHeader} />
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -228,7 +229,7 @@ const Chat = ({ navigation }) => {
               console.log("Video pressed");
             }}
           >
-            <FontAwesome name="video-camera" style={styles.icon} />
+            <FontAwesome name="video-camera" style={styles.iconHeader} />
           </TouchableOpacity>
         </View>
       </View>
@@ -284,7 +285,7 @@ const Chat = ({ navigation }) => {
         <TouchableOpacity>
           <Entypo
             name="grid"
-            style={{ fontSize: 36, color: colors.mainColor }}
+            style={{ fontSize: 30, color: colors.mainColor }}
           />
         </TouchableOpacity>
 
@@ -298,17 +299,17 @@ const Chat = ({ navigation }) => {
             })
           }
         >
-          <FontAwesome name="camera" style={styles.icon} />
+          <FontAwesome name="camera" style={styles.iconFooter} />
         </TouchableOpacity>
 
         {/* Picture/Photo button */}
         <TouchableOpacity onPress={pickImage}>
-          <FontAwesome name="photo" style={styles.icon} />
+          <FontAwesome name="photo" style={styles.iconFooter} />
         </TouchableOpacity>
 
         {/* Microphone button */}
         <TouchableOpacity>
-          <FontAwesome name="microphone" style={styles.icon} />
+          <FontAwesome name="microphone" style={styles.iconFooter} />
         </TouchableOpacity>
 
         {/* Message Text input */}
@@ -318,21 +319,21 @@ const Chat = ({ navigation }) => {
             onChangeText={setText}
             value={text}
             placeholder="Aa"
-            placeholderTextColor={"#ddd"}
+            placeholderTextColor={"#8E8E93"}
           />
           <TouchableOpacity style={styles.inputEmoji}>
-            <Icon name="smile" style={styles.icon} />
+            <Icon name="smile" style={styles.iconEmoji} />
           </TouchableOpacity>
         </View>
 
         {/* a.k.a Like button */}
         <TouchableOpacity>
-          <AntDesign name="like1" style={styles.icon} />
+          <AntDesign name="like1" style={styles.iconFooter} />
         </TouchableOpacity>
 
         {/* a.k.a Send button */}
         <TouchableOpacity onPress={sendMessage}>
-          <Ionicons name="send" style={styles.icon} />
+          <Ionicons name="send" style={styles.iconFooter} />
         </TouchableOpacity>
 
         {/* ... */}

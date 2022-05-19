@@ -4,22 +4,36 @@ import { colors } from '../../../../theme/colors';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 24,
+    marginTop: 4,
+    color: '#ffffff',
   },
-  icon: {
-    fontSize: 28,
+  iconHeader: {
+    fontSize: 21,
+    color: colors.mainColor,
+  },
+  iconFooter: {
+    fontSize: 21,
+    color: colors.mainColor,
+    marginRight: 10,
+    marginLeft: 10,
+  },
+  iconEmoji: {
+    fontSize: 21,
     color: colors.mainColor,
   },
   header: {
     flex: 1,
     flexDirection: 'row',
-    paddingVertical: 8,
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    paddingVertical: 1,
+    borderBottomColor: 'rgba(0, 0, 0, 0.07)',
+    borderBottomWidth: 1,
   },
   backIcon: {
-    fontSize: 40,
+    fontSize: 30,
     color: colors.mainColor,
+    marginLeft: 8,
   },
   headerInfo: {
     flex: 4,
@@ -38,15 +52,19 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
+    marginRight: 8,
   },
   body: {
     flex: 11,
+    marginLeft: 8,
   },
   footer: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginLeft: 10,
+    marginRight: 0,
   },
   preview: {
     position: "absolute",
@@ -87,16 +105,19 @@ export const styles = StyleSheet.create({
   input: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: colors.gray02,
-    borderRadius: 16,
+    alignItems: 'center',
+    backgroundColor: colors.gray03,
+    borderRadius: 19,
+    height: 37,
   },
   inputText: {
     flex: 1,
-    paddingLeft: 8,
-    color: colors.white,
+    paddingLeft: 11,
+    color: colors.zblack,
     fontSize: 16,
   },
   inputEmoji: {
     padding: 4,
+    paddingRight: 9,
   },
 })

@@ -4,6 +4,7 @@ import { Video } from "expo-av";
 
 import { styles } from "./Message.styles";
 import { images } from "../../../../images";
+import { enumMessenger } from "../../../../utils/enum";
 
 export const LeftMessage = ({ type, message, time, userName, avatar }) => {
   const video = useRef(null);
@@ -53,39 +54,43 @@ export const RightMessage = ({ type, message, time, userName, avatar }) => {
 
   return (
     <View style={styles.right_container}>
-      {type === 0 && (
-        <View style={styles.text}>
-          <Text key={userName} style={styles.textValue}>
-            {message}
-          </Text>
-          <Text>{userName}</Text>
-          <Text>{time}</Text>
-        </View>
-      )}
+      <View style={styles.containerRightContainer}>
+        <View style={styles.message}>
+          {type === enumMessenger.msgType.text && (
+            <View style={styles.text}>
+              <Text key={userName} style={styles.textValue}>
+                {message}
+              </Text>
+              {/* <Text>{userName}</Text> */}
+              {/* <Text>{time}</Text> */}
+            </View>
+          )}
 
-      {type === 1 && (
-        <View style={styles.image}>
-          <Image source={{ uri: message }} style={styles.imageMessage} />
-        </View>
-      )}
+          {type === enumMessenger.msgType.image && (
+            <View style={styles.image}>
+              <Image source={{ uri: message }} style={styles.imageMessage} />
+            </View>
+          )}
 
-      {type === 2 && (
-        <View style={styles.video}>
-          <Video
-            ref={video}
-            style={styles.videoMessage}
-            source={{
-              uri: message,
-            }}
-            useNativeControls
-            resizeMode="contain"
-            isLooping
-          />
+          {type === enumMessenger.msgType.file && (
+            <View style={styles.video}>
+              <Video
+                ref={video}
+                style={styles.videoMessage}
+                source={{
+                  uri: message,
+                }}
+                useNativeControls
+                resizeMode="contain"
+                isLooping
+              />
+            </View>
+          )}
         </View>
-      )}
 
-      <View style={styles.avatar}>
-        <Image source={{ uri: avatar }} style={styles.checkedIcon} />
+        <View style={styles.avatar}>
+          <Image source={{ uri: avatar }} style={styles.checkedIcon} />
+        </View>
       </View>
     </View>
   );
